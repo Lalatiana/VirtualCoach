@@ -8,6 +8,12 @@
 
 #import "TrainingDataEngine.h"
 
+@interface TrainingDataEngine()
+
+-(NSMutableArray<TrainingDO*>*)fromResultSetToTrainingDOList:(NSArray*)result;
+
+@end
+
 @implementation TrainingDataEngine
 
 /*!
@@ -57,6 +63,32 @@
 //
 -(void)deleteTrainingWithId:(int)trainingId {
     
+}
+
+//
+// ***************** UTIL ****************
+//
+-(NSMutableArray<TrainingDO*>*)fromResultSetToTrainingDOList:(NSArray*)result {
+    
+    NSMutableArray<TrainingDO*>* trainingDOList = [[NSMutableArray<TrainingDO*> alloc] initWithCapacity:[result[0] count]];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+
+    for (int i = 0; i < [result[0] count]; i++) {
+        
+        int stringId = [[[result objectAtIndex:0] objectAtIndex:i] intValue];
+        NSString* stringDate = [[[result objectAtIndex:1] objectAtIndex:i] stringValue];
+        NSString* stringName = [[[result objectAtIndex:2] objectAtIndex:i] stringValue];
+        NSString* stringPlace = [[[result objectAtIndex:3] objectAtIndex:i] stringValue];
+        
+        [dateFormatter setDateFormat:@"dd/MM/YYYY"];
+        NSDate* date = [dateFormatter dateFromString:stringDate];
+        
+        TrainingDO* trainingDO = [[TrainingDO alloc] initWithId:stringId andDate:date andName:stringName andPlace:stringPlace andVideos:nil];
+        
+        [trainingDOList addObject:trainingDO];
+    }
+    
+    return trainingDOList;
 }
 
 @end

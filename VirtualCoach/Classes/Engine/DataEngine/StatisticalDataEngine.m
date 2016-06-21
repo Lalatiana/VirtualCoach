@@ -105,6 +105,8 @@
     
     NSArray* searchResult = [_statisticalDAO searchByYear:stringYear andIdPlayer:stringPlayerId];
     
+    // TODO : average by month
+    
     return [self fromResultSetToStatisticalDOList:searchResult];
 }
 
@@ -112,6 +114,21 @@
     NSString* stringPlayerId = [NSString stringWithFormat:@"%d", playerId];
     
     NSArray* searchResult = [_statisticalDAO searchByIdPlayer:stringPlayerId];
+    
+    return [self fromResultSetToStatisticalDOList:searchResult];
+}
+
+-(NSMutableArray<StatisticalDO*>*)searchFromDay:(int)startDay andMonth:(int)startMonth andYear:(int)startYear toDay:(int)endDay andMonth:(int)endMonth andYear:(int)endYear forPlayerId:(int)playerId {
+    
+    NSString* stringStartDay = [NSString stringWithFormat:@"%d", startDay];
+    NSString* stringStartMonth = [NSString stringWithFormat:@"%d", startMonth];
+    NSString* stringStartYear = [NSString stringWithFormat:@"%d", startYear];
+    NSString* stringEndDay = [NSString stringWithFormat:@"%d", endDay];
+    NSString* stringEndMonth = [NSString stringWithFormat:@"%d", endMonth];
+    NSString* stringEndYear = [NSString stringWithFormat:@"%d", endYear];
+    NSString* stringPlayerId = [NSString stringWithFormat:@"%d", playerId];
+    
+    NSArray* searchResult = [_statisticalDAO searchFromDay:stringStartDay andMonth:stringStartMonth andYear:stringStartYear toDay:stringEndDay andMonth:stringEndMonth andYear:stringEndYear forPlayerId:stringPlayerId];
     
     return [self fromResultSetToStatisticalDOList:searchResult];
 }
@@ -153,31 +170,20 @@
     
     for (int i = 0; i < [result[0] count]; i++) {
         
-        StatisticalDO* statisticalDO = [[StatisticalDO alloc] init];
+        int statisticalId = [[[result objectAtIndex:0] objectAtIndex:i] intValue];
+        int forehandCount = [[[result objectAtIndex:1] objectAtIndex:i] intValue];
+        int backhandCount = [[[result objectAtIndex:2] objectAtIndex:i] intValue];
+        int serviceCount = [[[result objectAtIndex:3] objectAtIndex:i] intValue];
+        int winningRun = [[[result objectAtIndex:4] objectAtIndex:i] intValue];
+        int loosingRun = [[[result objectAtIndex:5] objectAtIndex:i] intValue];
+        float forehandGlobalSuccessRate = [[[result objectAtIndex:6] objectAtIndex:i] floatValue];
+        float backhandGlobalSuccessRate = [[[result objectAtIndex:7] objectAtIndex:i] floatValue];
+        float serviceGlobalSuccessRate = [[[result objectAtIndex:8] objectAtIndex:i] floatValue];
+        int day = [[[result objectAtIndex:9] objectAtIndex:i] intValue];
+        int month = [[[result objectAtIndex:10] objectAtIndex:i] intValue];
+        int year = [[[result objectAtIndex:11] objectAtIndex:i] intValue];
         
-        int forehandCount = [[[result objectAtIndex:0] objectAtIndex:i] intValue];
-        int backhandCount = [[[result objectAtIndex:1] objectAtIndex:i] intValue];
-        int serviceCount = [[[result objectAtIndex:2] objectAtIndex:i] intValue];
-        int winningRun = [[[result objectAtIndex:3] objectAtIndex:i] intValue];
-        int loosingRun = [[[result objectAtIndex:4] objectAtIndex:i] intValue];
-        float forehandGlobalSuccessRate = [[[result objectAtIndex:5] objectAtIndex:i] floatValue];
-        float backhandGlobalSuccessRate = [[[result objectAtIndex:6] objectAtIndex:i] floatValue];
-        float serviceGlobalSuccessRate = [[[result objectAtIndex:7] objectAtIndex:i] floatValue];
-        int day = [[[result objectAtIndex:8] objectAtIndex:i] intValue];
-        int month = [[[result objectAtIndex:9] objectAtIndex:i] intValue];
-        int year = [[[result objectAtIndex:10] objectAtIndex:i] intValue];
-        
-        statisticalDO.forehandCount = forehandCount;
-        statisticalDO.backhandCount = backhandCount;
-        statisticalDO.serviceCount = serviceCount;
-        statisticalDO.winningRun = winningRun;
-        statisticalDO.loosingRun = loosingRun;
-        statisticalDO.forehandGlobalSuccessRate = forehandGlobalSuccessRate;
-        statisticalDO.backhandGlobalSuccessRate = backhandGlobalSuccessRate;
-        statisticalDO.serviceGlobalSuccessRate = serviceGlobalSuccessRate;
-        statisticalDO.day = day;
-        statisticalDO.month = month;
-        statisticalDO.year = year;
+        StatisticalDO* statisticalDO = [[StatisticalDO alloc] initWithId:statisticalId andForehandCount:forehandCount andBackhandCount:backhandCount andServiceCount:serviceCount andWinningRun:winningRun andLoosingRun:loosingRun andForehandGlobalSuccessRate:forehandGlobalSuccessRate andBackhandGlobalSuccessRate:backhandGlobalSuccessRate andServiceGlobalSuccessRate:serviceGlobalSuccessRate andDay:day andMonth:month andYear:year];
         
         [statisticalDOList addObject:statisticalDO];
     }

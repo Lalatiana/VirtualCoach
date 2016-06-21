@@ -432,7 +432,15 @@
     
     /*********************************************TEST Statistical****************************************************/
     //insert stat
-    NSNumber *insertStat = (NSNumber *) [_stat insertIntoStatistical:@"5" backhanh:@"7" service:@"4" winningRun:@"2" losingRun:@"1" globalSuccessRateForehand:@"20%" globalSuccessRateBackhand:@"35%" globalSuccessRateService:@"50%" day:@"29" month:@"05" year:@"2016" idPlayer:idP];
+    NSNumber *insertStat = (NSNumber *) [_stat insertIntoStatistical:@"5" backhanh:@"7" service:@"4" winningRun:@"2" losingRun:@"1" globalSuccessRateForehand:@"0.20" globalSuccessRateBackhand:@"0.35" globalSuccessRateService:@"0.50" day:@"29" month:@"05" year:@"2016" idPlayer:idP];
+    
+    [_stat insertIntoStatistical:@"2" backhanh:@"3" service:@"4" winningRun:@"2" losingRun:@"1" globalSuccessRateForehand:@"0.20" globalSuccessRateBackhand:@"0.35" globalSuccessRateService:@"0.50" day:@"02" month:@"06" year:@"2016" idPlayer:idP];
+    
+    [_stat insertIntoStatistical:@"6" backhanh:@"3" service:@"1" winningRun:@"2" losingRun:@"1" globalSuccessRateForehand:@"0.56" globalSuccessRateBackhand:@"0.35" globalSuccessRateService:@"0.60" day:@"28" month:@"12" year:@"2016" idPlayer:idP];
+    
+    [_stat insertIntoStatistical:@"1" backhanh:@"3" service:@"1" winningRun:@"2" losingRun:@"1" globalSuccessRateForehand:@"0.23" globalSuccessRateBackhand:@"0.45" globalSuccessRateService:@"0.89" day:@"02" month:@"01" year:@"2017" idPlayer:idP];
+    
+    [_stat insertIntoStatistical:@"13" backhanh:@"12" service:@"9" winningRun:@"2" losingRun:@"1" globalSuccessRateForehand:@"0.23" globalSuccessRateBackhand:@"0.45" globalSuccessRateService:@"0.89" day:@"04" month:@"01" year:@"2017" idPlayer:idP];
     
     XCTAssertEqual([insertStat boolValue],YES );
     
@@ -442,7 +450,7 @@
     NSLog(@"stats:%@", stats);
     NSString *idstat = [[[stats objectAtIndex:0] objectAtIndex:0] stringValue];
     
-    XCTAssertEqualObjects(@"20%", stats[6][0] );
+    XCTAssertEqual([[NSNumber numberWithFloat:0.2] floatValue], [[[stats objectAtIndex:6] objectAtIndex:0] floatValue]);
     
     //search
     NSArray *stat1 = [_stat searchByMonth:@"05" Andyear:@"2016" andIdPlayer:idP];
@@ -468,6 +476,14 @@
     NSLog(@"STAT:%@", statis);
     
     XCTAssertEqualObjects(@"1",[[[statis objectAtIndex:12] objectAtIndex:0] stringValue]);
+    
+    NSArray* result = [_stat searchFromDay:@"20" andMonth:@"05" andYear:@"2016" toDay:@"10" andMonth:@"06" andYear:@"2016" forPlayerId:idP];
+    
+    XCTAssertEqual(2, [result[0] count]);
+    
+    result = [_stat searchFromDay:@"25" andMonth:@"12" andYear:@"2016" toDay:@"12" andMonth:@"1" andYear:@"2017" forPlayerId:idP];
+    
+    XCTAssertEqual(3, [result[0] count]);
     
     //update
     NSNumber *updateServiceGSR = (NSNumber *)[_stat updateServiceGlobalSuccessRate:@"70%" forDay:@"29" Month:@"05" andYear:@"2016" andIdPlayer:idP];

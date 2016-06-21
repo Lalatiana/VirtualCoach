@@ -120,6 +120,76 @@
     return result;
 }
 
+-(NSArray *)searchFromDay:(NSString*)startDay andMonth:(NSString *)startMonth andYear:(NSString*)startYear toDay:(NSString*)endDay andMonth:(NSString*)endMonth andYear:(NSString*)endYear forPlayerId:(NSString*)playerId {
+    
+    NSString* query = @"select * from Statistical where idplayer='";
+    query = [query stringByAppendingString:playerId];
+    query = [query stringByAppendingString:@"' and "];
+    
+    if (startYear < endYear) {
+        // Year switching
+        query = [query stringByAppendingString:@"year between '"];
+        query = [query stringByAppendingString:startYear];
+        query = [query stringByAppendingString:@"' and '"];
+        query = [query stringByAppendingString:endYear];
+        query = [query stringByAppendingString:@"' "];
+        
+        // Month switching
+        query = [query stringByAppendingString:@"and (month='"];
+        query = [query stringByAppendingString:startMonth];
+        query = [query stringByAppendingString:@"' or month='"];
+        query = [query stringByAppendingString:endMonth];
+        query = [query stringByAppendingString:@"') "];
+        
+        // Day switching
+        query = [query stringByAppendingString:@"and (day between '"];
+        query = [query stringByAppendingString:startDay];
+        query = [query stringByAppendingString:@"' and '31' "];
+        query = [query stringByAppendingString:@"or day between '1' and '"];
+        query = [query stringByAppendingString:endDay];
+        query = [query stringByAppendingString:@"')"];
+        
+    } else {
+        query = [query stringByAppendingString:@"year='"];
+        query = [query stringByAppendingString:startYear];
+        query = [query stringByAppendingString:@"' and "];
+        
+        if (startMonth < endMonth) {
+            
+            // Month switching
+            query = [query stringByAppendingString:@"(month='"];
+            query = [query stringByAppendingString:startMonth];
+            query = [query stringByAppendingString:@"' or month='"];
+            query = [query stringByAppendingString:endMonth];
+            query = [query stringByAppendingString:@"') "];
+            
+            // Day switching
+            query = [query stringByAppendingString:@"and (day between '"];
+            query = [query stringByAppendingString:startDay];
+            query = [query stringByAppendingString:@"' and '31' "];
+            query = [query stringByAppendingString:@"or day between '1' and '"];
+            query = [query stringByAppendingString:endDay];
+            query = [query stringByAppendingString:@"')"];
+            
+        } else {
+            query = [query stringByAppendingString:@"month='"];
+            query = [query stringByAppendingString:startMonth];
+            query = [query stringByAppendingString:@"' and day between '"];
+            query = [query stringByAppendingString:startDay];
+            query = [query stringByAppendingString:@"' and '"];
+            query = [query stringByAppendingString:endYear];
+            query = [query stringByAppendingString:@"'"];
+        }
+    }
+    
+    NSLog(@"********DEBUG, query = %@", query);
+    
+    NSArray * result =[[NSArray alloc] init];
+    result = [DatabaseService query:query mode:VCSelectIntegerIndexedResult];
+    
+    return result;
+}
+
 //UPDATE
 -(id)updateGlobalSuccessRate:(NSString *) gsr forDay:(NSString *) d Month:(NSString *) m andYear:(NSString *) y andIdPlayer:(NSString *) idPlayer
 {

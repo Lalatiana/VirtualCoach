@@ -29,6 +29,7 @@
 -(NSMutableArray<StatisticalDO*>*)searchByMonth:(int)month andYear:(int)year andPlayerId:(int)playerId;
 -(NSMutableArray<StatisticalDO*>*)searchByYear:(int)year andPlayerId:(int)playerId;
 -(NSMutableArray<StatisticalDO*>*)searchByPlayerId:(int)playerId;
+-(NSMutableArray<StatisticalDO*>*)searchFromDay:(int)startDay andMonth:(int)startMonth andYear:(int)startYear toDay:(int)endDay andMonth:(int)endMonth andYear:(int)endYear forPlayerId:(int)playerId;
 
 // UPDATE
 -(void)updateServiceGlobalSuccessRate:(float)serviceGlobalSuccessRate forDay:(int)day andMonth:(int)month andYear:(int)year andPlayerId:(int)playerId;

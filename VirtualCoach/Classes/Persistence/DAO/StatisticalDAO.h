@@ -19,6 +19,8 @@
 -(NSArray *)searchByMonth:(NSString *) month Andyear:(NSString *) year andIdPlayer:(NSString *) idPlayer;
 -(NSArray *)searchByYear:(NSString *) year andIdPlayer:(NSString *) idPlayer;
 -(NSArray *)searchByIdPlayer:(NSString *) idP;
+-(NSArray *)searchFromDay:(NSString*)startDay andMonth:(NSString *)startMonth andYear:(NSString*)startYear toDay:(NSString*)endDay andMonth:(NSString*)endMonth andYear:(NSString*)endYear forPlayerId:(NSString*)playerId;
+
 //UPDATE
 -(id)updateServiceGlobalSuccessRate:(NSString *) gsr forDay:(NSString *) d Month:(NSString *) m andYear:(NSString *) y andIdPlayer:(NSString *) idPlayer;
 -(id)updateBackhandGlobalSuccessRate:(NSString *) gsr forDay:(NSString *) d Month:(NSString *) m andYear:(NSString *) y andIdPlayer:(NSString *) idPlayer;
