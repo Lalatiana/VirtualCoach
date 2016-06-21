@@ -10,13 +10,14 @@
 #import "VideoProcess.h"
 #import "KmeanEntryDataSet.h"
 #import "TrackingAnalysisProcess.h"
+#import "KmeanCalculation.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
         NSLog(@"Hello, World!");
         
-        NSDictionary *dictInfo = [NSDictionary dictionaryWithContentsOfFile:@"/Users/iSeven/Downloads/eu.iseven.VirtualCoach 2016-06-13 17:03.47.253.xcappdata/AppData/Documents/2016-06-06_19.19.40-data.plist"];
+        NSDictionary *dictInfo = [NSDictionary dictionaryWithContentsOfFile:@"/Volumes/ZORO 1/VideoTest/2016-06-06_19.19.40-data.plist"];
         
         VideoProcess *vidProc = [[VideoProcess alloc] initWithDictionary:dictInfo];
         
@@ -43,15 +44,26 @@ int main(int argc, const char * argv[]) {
         
         for (NSUInteger i = 0; i < dataEntrysets.count; i++)
         {
-            KmeanEntryDataSet *entryDataSet = (KmeanEntryDataSet *)[[dataEntrysets objectAtIndex:i] objectForKey:@"entryDataset"];
+            KmeanEntryDataSet *dataSetEntry = (KmeanEntryDataSet *)[[dataEntrysets objectAtIndex:i] objectForKey:@"entryDataset"];
+            
+            /*
+             KmeanCalculation *kmeanCalculation = [[KmeanCalculation alloc] initKmeanCalculationWithKmeanEntryDataSet:dataSetEntry andClusterCount:2];
+             NSLog(@"begin clusturing");
+             [kmeanCalculation kmeanProcessWithMaxIteration:60];
+             NSLog(@"end clusturing");
+             */
+            
             NSNumber *startSequenceImage = (NSNumber *)[[dataEntrysets objectAtIndex:i] objectForKey:@"startSequenceImage"];
             
             NSNumber *endSequenceImage = (NSNumber *)[[dataEntrysets objectAtIndex:i] objectForKey:@"endSequenceImage"];
             
-            NSString *path = [videoDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%d-(%d,%d)dataEntrySet.txt", videoName, (int)i, startSequenceImage.intValue, endSequenceImage.intValue]];
+            NSString *path = [videoDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%d-(%d,%d)dataEntrySet4d.txt", videoName, (int)i, startSequenceImage.intValue, endSequenceImage.intValue]];
+            //NSString *pathForKmean = [videoDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%d-(%d,%d)kmeanCalculation.txt", videoName, (int)i, startSequenceImage.intValue, endSequenceImage.intValue]];
             
             
-            [entryDataSet writeKmeanDatasetForTestAtPath:path];
+            //[entryDataSet writeKmeanDatasetForTestAtPath:path];
+            //[kmeanCalculation writeKmeanCalculationForTestAtPath:pathForKmean];
+            [dataSetEntry writeKmeanDataset4dForTestAtPath:path];
         }
         
         NSLog(@"Done!");

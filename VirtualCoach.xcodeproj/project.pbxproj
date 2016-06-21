@@ -112,6 +112,9 @@
 		8A7965921D11A5DB0096D746 /* UIPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7965901D11A5DB0096D746 /* UIPlayerView.m */; };
 		8A7965971D11A5E40096D746 /* UIMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7965941D11A5E40096D746 /* UIMenuViewController.m */; };
 		8A7965981D11A5E40096D746 /* UIPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7965961D11A5E40096D746 /* UIPlayerViewController.m */; };
+		8A9FD54B1D16B0B0004A8615 /* UIMultipleProcessProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9FD54A1D16B0B0004A8615 /* UIMultipleProcessProgressView.m */; };
+		8A9FD54E1D16DD00004A8615 /* UIProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9FD54D1D16DD00004A8615 /* UIProfileView.m */; };
+		8A9FD5511D16DD66004A8615 /* UIProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9FD5501D16DD66004A8615 /* UIProfileViewController.m */; };
 		8AB35A9A1D0C68D70026503B /* UIBaseTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB35A971D0C68D70026503B /* UIBaseTextField.m */; };
 		8AB35A9B1D0C68D70026503B /* UICheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB35A991D0C68D70026503B /* UICheckbox.m */; };
 		8AB35AA61D0C68E70026503B /* UIAccountCreationCredentialsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB35A9D1D0C68E70026503B /* UIAccountCreationCredentialsView.m */; };
@@ -387,6 +390,12 @@
 		8A7965941D11A5E40096D746 /* UIMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIMenuViewController.m; sourceTree = "<group>"; };
 		8A7965951D11A5E40096D746 /* UIPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPlayerViewController.h; sourceTree = "<group>"; };
 		8A7965961D11A5E40096D746 /* UIPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPlayerViewController.m; sourceTree = "<group>"; };
+		8A9FD5491D16B0B0004A8615 /* UIMultipleProcessProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIMultipleProcessProgressView.h; sourceTree = "<group>"; };
+		8A9FD54A1D16B0B0004A8615 /* UIMultipleProcessProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIMultipleProcessProgressView.m; sourceTree = "<group>"; };
+		8A9FD54C1D16DD00004A8615 /* UIProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIProfileView.h; sourceTree = "<group>"; };
+		8A9FD54D1D16DD00004A8615 /* UIProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIProfileView.m; sourceTree = "<group>"; };
+		8A9FD54F1D16DD66004A8615 /* UIProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIProfileViewController.h; sourceTree = "<group>"; };
+		8A9FD5501D16DD66004A8615 /* UIProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIProfileViewController.m; sourceTree = "<group>"; };
 		8AB35A961D0C68D70026503B /* UIBaseTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIBaseTextField.h; sourceTree = "<group>"; };
 		8AB35A971D0C68D70026503B /* UIBaseTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIBaseTextField.m; sourceTree = "<group>"; };
 		8AB35A981D0C68D70026503B /* UICheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICheckbox.h; sourceTree = "<group>"; };
@@ -757,6 +766,8 @@
 		6EB1CFFB1CEA2D8B006B6940 /* ControllerLayer */ = {
 			isa = PBXGroup;
 			children = (
+				6EB1CFFC1CEA2D8B006B6940 /* Base */,
+				6EB1CFFF1CEA2D8B006B6940 /* LiveCapture */,
 				8A7965931D11A5E40096D746 /* UIMenuViewController.h */,
 				8A7965941D11A5E40096D746 /* UIMenuViewController.m */,
 				8A7965951D11A5E40096D746 /* UIPlayerViewController.h */,
@@ -765,12 +776,12 @@
 				8AB35AAC1D0C68F50026503B /* UIAccountCreationViewController.m */,
 				8AB35AAD1D0C68F50026503B /* UITrainingViewController.h */,
 				8AB35AAE1D0C68F50026503B /* UITrainingViewController.m */,
-				6EB1CFFC1CEA2D8B006B6940 /* Base */,
-				6EB1CFFF1CEA2D8B006B6940 /* LiveCapture */,
 				6EB1D0021CEA2D8B006B6940 /* UIApplicationNavigationViewController.h */,
 				6EB1D0031CEA2D8B006B6940 /* UIApplicationNavigationViewController.m */,
 				6EB1D0041CEA2D8B006B6940 /* UIAuthenticationViewController.h */,
 				6EB1D0051CEA2D8B006B6940 /* UIAuthenticationViewController.m */,
+				8A9FD54F1D16DD66004A8615 /* UIProfileViewController.h */,
+				8A9FD5501D16DD66004A8615 /* UIProfileViewController.m */,
 			);
 			path = ControllerLayer;
 			sourceTree = "<group>";
@@ -798,8 +809,10 @@
 		6EB1D00A1CEA2D8B006B6940 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
-				8A79658D1D11A5DB0096D746 /* UIMenuView.h */,
+				6EB1D00B1CEA2D8B006B6940 /* Base */,
+				6EB1D0121CEA2D8B006B6940 /* LiveCapture */,
 				8A79658E1D11A5DB0096D746 /* UIMenuView.m */,
+				8A79658D1D11A5DB0096D746 /* UIMenuView.h */,
 				8A79658F1D11A5DB0096D746 /* UIPlayerView.h */,
 				8A7965901D11A5DB0096D746 /* UIPlayerView.m */,
 				8AB35A9C1D0C68E70026503B /* UIAccountCreationCredentialsView.h */,
@@ -812,12 +825,14 @@
 				8AB35AA31D0C68E70026503B /* UIAuthenticationCredentialsView.m */,
 				8AB35AA41D0C68E70026503B /* UITrainingView.h */,
 				8AB35AA51D0C68E70026503B /* UITrainingView.m */,
-				6EB1D00B1CEA2D8B006B6940 /* Base */,
-				6EB1D0121CEA2D8B006B6940 /* LiveCapture */,
 				6EB1D0231CEA2D8B006B6940 /* UIAuthenticationView.h */,
 				6EB1D0241CEA2D8B006B6940 /* UIAuthenticationView.m */,
 				8A2512CB1D0DB5D200DADFAD /* UIProcessProgressView.h */,
 				8A2512CC1D0DB5D200DADFAD /* UIProcessProgressView.m */,
+				8A9FD5491D16B0B0004A8615 /* UIMultipleProcessProgressView.h */,
+				8A9FD54A1D16B0B0004A8615 /* UIMultipleProcessProgressView.m */,
+				8A9FD54C1D16DD00004A8615 /* UIProfileView.h */,
+				8A9FD54D1D16DD00004A8615 /* UIProfileView.m */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -1570,6 +1585,7 @@
 				0D95DFD41D0599DD0007F35E /* CoachDAO.m in Sources */,
 				0D35B0151D144B2100411ED3 /* MovementDataEngine.m in Sources */,
 				6EB1D03C1CEA2D8B006B6940 /* UIAuthenticationView.m in Sources */,
+				8A9FD54E1D16DD00004A8615 /* UIProfileView.m in Sources */,
 				0D95DFDA1D0599DD0007F35E /* PlayerTrophyDAO.m in Sources */,
 				0D35B01C1D144B2100411ED3 /* VideoReferenceDataEngine.m in Sources */,
 				8A2512C91D0DAF9900DADFAD /* TrackingIrrelevantSequencesRemover.m in Sources */,
@@ -1602,6 +1618,7 @@
 				6EB1D03B1CEA2D8B006B6940 /* UIRecordingIconView.m in Sources */,
 				6EB1D02E1CEA2D8B006B6940 /* UIAuthenticationViewController.m in Sources */,
 				6EB1D0321CEA2D8B006B6940 /* UIBaseLabel.m in Sources */,
+				8A9FD54B1D16B0B0004A8615 /* UIMultipleProcessProgressView.m in Sources */,
 				8AB35AAA1D0C68E70026503B /* UITrainingView.m in Sources */,
 				6EB1CFF31CEA2D5E006B6940 /* CaptureSessionControllerFactory.m in Sources */,
 				8A2512CD1D0DB5D200DADFAD /* UIProcessProgressView.m in Sources */,
@@ -1656,6 +1673,7 @@
 				0D95DFD31D0599DD0007F35E /* CheckDatabaseDAO.m in Sources */,
 				0D35B0171D144B2100411ED3 /* PlayerDataEngine.m in Sources */,
 				6EE37B9D1C8973C7006E0626 /* KmeanEntryDataSet.m in Sources */,
+				8A9FD5511D16DD66004A8615 /* UIProfileViewController.m in Sources */,
 				6EB1D0311CEA2D8B006B6940 /* UIBaseButton.m in Sources */,
 				8AB35A9A1D0C68D70026503B /* UIBaseTextField.m in Sources */,
 				6EB1CFF11CEA2D5E006B6940 /* CaptureSession.m in Sources */,
@@ -1908,7 +1926,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/Libraries/libimagic/include/**";
-				LIBRARY_SEARCH_PATHS = /Users/iSeven/Desktop;
+				LIBRARY_SEARCH_PATHS = /Users/bizoro/Desktop;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_LDFLAGS = "-limagic_std";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1923,7 +1941,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/Libraries/libimagic/include/**";
-				LIBRARY_SEARCH_PATHS = /Users/iSeven/Desktop;
+				LIBRARY_SEARCH_PATHS = /Users/bizoro/Desktop;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_LDFLAGS = "-limagic_std";
 				PRODUCT_NAME = "$(TARGET_NAME)";

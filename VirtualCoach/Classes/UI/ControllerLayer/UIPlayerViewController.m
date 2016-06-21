@@ -14,6 +14,8 @@
 @property (nonatomic) NSInteger currentDay;
 @property (nonatomic) NSInteger currentMonth;
 @property (nonatomic) NSInteger currentYear;
+@property (nonatomic) NSInteger currentWeekStartDay;
+@property (nonatomic) NSInteger currentWeekEndDay;
 
 @property (nonatomic, strong) NSArray *currentOrdinateAxisTitles;
 
@@ -63,13 +65,6 @@
     Axis *weeklyAxis = [Axis weeklyAxis];
     
     Axis *motionCountAxis = [Axis motionCountAxis];
-    //    Axis *motionCountAxis = [Axis defaultAxis];
-    //    motionCountAxis.maxBound = [NSNumber numberWithInt:1000];
-    //    motionCountAxis.unit = [NSNumber numberWithInt:100];
-    
-    //    Axis *progressAxis = [Axis defaultAxis];
-    //    progressAxis.maxBound = [NSNumber numberWithFloat:100.f];
-    //    progressAxis.unit = [NSNumber numberWithInt:10];
     
     CoordinateSystem2D *weeklyCoordinateSystem = [[CoordinateSystem2D alloc] init];
     
@@ -99,6 +94,13 @@
     
     NSDate *startDate = [weekStartAndEndDates objectForKey:@"startDate"];
     NSDate *endDate = [weekStartAndEndDates objectForKey:@"endDate"];
+    
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:startDate];
+    _currentWeekStartDay = [components day];
+    components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:endDate];
+    _currentWeekEndDay = [components day];
+    
+    NSLog(@"_currentWeekStartDay : %ld, _currentWeekEndDay : %ld", _currentWeekStartDay, _currentWeekEndDay);
     
     [_playerView.coordinateSystemView setCoordinateSystemTitle:[NSString stringWithFormat:@"%@ - %@", [DateUtilities stringWithDate:startDate], [DateUtilities stringWithDate:endDate]]];
     
@@ -513,15 +515,16 @@
                 
                 _currentDay = [winningTitle intValue];
                 
-                //                NSString *currentCoordinateSystemTitle = _playerView.coordinateSystemView.titleLabel.attributedText.string;
-                //                NSString *monthName = [[currentCoordinateSystemTitle stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%ld", (long)_currentYear] withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                //
-                //                _currentMonth = [DateUtilities monthForTitle:monthName];
                 NSDate *selectedDate = [DateUtilities dateWithYear:_currentYear month:_currentMonth day:_currentDay];
                 NSDictionary *weekStartAndEndDates = [DateUtilities startAndEndDateOfWeekForDate:selectedDate];
                 
                 NSDate *startDate = [weekStartAndEndDates objectForKey:@"startDate"];
                 NSDate *endDate = [weekStartAndEndDates objectForKey:@"endDate"];
+                
+                NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:startDate];
+                _currentWeekStartDay = [components day];
+                components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:endDate];
+                _currentWeekEndDay = [components day];
                 
                 [_playerView.coordinateSystemView setCoordinateSystemTitle:[NSString stringWithFormat:@"%@ - %@", [DateUtilities stringWithDate:startDate], [DateUtilities stringWithDate:endDate]]];
                 
@@ -590,9 +593,33 @@
         {
             NSLog(@"Left swipe");
             
-            if (isWeeklyCoordinateSystem)
+            if (isWeeklyCoordinateSystem) // some bugs when we change the year
             {
+                NSDate *startDate = [DateUtilities dateWithYear:_currentYear month:_currentMonth day:_currentWeekStartDay];
                 
+                NSCalendar *cal = [NSCalendar currentCalendar];
+                NSDate *tomorrow = [cal dateByAddingUnit:NSCalendarUnitDay
+                                                   value:7
+                                                  toDate:startDate
+                                                 options:0];
+                
+                NSDictionary *startAndEndOfWeekDates = [DateUtilities startAndEndDateOfWeekForDate:tomorrow];
+                
+                NSDate *nextStartDate = [startAndEndOfWeekDates objectForKey:@"startDate"];
+                NSDate *nextEndDate = [startAndEndOfWeekDates objectForKey:@"endDate"];
+                
+                NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:nextStartDate];
+                _currentYear = [components year];
+                _currentMonth = [components month];
+                _currentWeekStartDay = [components day];
+                components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:nextEndDate];
+                _currentWeekEndDay = [components day];
+                
+                [_playerView.coordinateSystemView undraw];
+                
+                [_playerView.coordinateSystemView setCoordinateSystemTitle:[NSString stringWithFormat:@"%@ - %@", [DateUtilities stringWithDate:nextStartDate], [DateUtilities stringWithDate:nextEndDate]]];
+                
+                [_playerView.coordinateSystemView draw];
             }
             
             else if (isMonthlyCoordinateSystem)
@@ -639,9 +666,36 @@
         {
             NSLog(@"Right swipe");
             
-            if (isWeeklyCoordinateSystem)
+            if (isWeeklyCoordinateSystem) // big bug when we try to move on previous year
             {
+                NSDate *endDate = [DateUtilities dateWithYear:_currentYear month:_currentMonth day:_currentWeekEndDay];
                 
+                NSCalendar *cal = [NSCalendar currentCalendar];
+                NSDate *yesterday = [cal dateByAddingUnit:NSCalendarUnitDay
+                                                   value:-7
+                                                  toDate:endDate
+                                                 options:0];
+                
+                NSDictionary *startAndEndOfWeekDates = [DateUtilities startAndEndDateOfWeekForDate:yesterday];
+                
+                NSDate *beforeStartDate = [startAndEndOfWeekDates objectForKey:@"startDate"];
+                NSDate *beforeEndDate = [startAndEndOfWeekDates objectForKey:@"endDate"];
+                
+                NSLog(@"beforeStartDate : %@", beforeStartDate);
+                NSLog(@"beforeEndDate : %@", beforeEndDate);
+                
+                NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:beforeEndDate];
+                _currentYear = [components year];
+                _currentMonth = [components month];
+                _currentWeekEndDay = [components day];
+                components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:beforeStartDate];
+                _currentWeekStartDay = [components day];
+                
+                [_playerView.coordinateSystemView undraw];
+                
+                [_playerView.coordinateSystemView setCoordinateSystemTitle:[NSString stringWithFormat:@"%@ - %@", [DateUtilities stringWithDate:beforeStartDate], [DateUtilities stringWithDate:beforeEndDate]]];
+                
+                [_playerView.coordinateSystemView draw];
             }
             
             else if (isMonthlyCoordinateSystem)

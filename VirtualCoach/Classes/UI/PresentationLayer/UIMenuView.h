@@ -16,6 +16,8 @@
 @property (nonatomic, strong) UIBaseButton *trainingViewButton;
 @property (nonatomic, strong) UIBaseButton *playerViewButton;
 
+@property (nonatomic, strong) UIBarButtonItem *profileButton;
+
 @property (nonatomic, strong) UIImageView *tennisCourtImage;
 
 @property (nonatomic, strong) UIBaseLabel *captureViewInformationsLabel;

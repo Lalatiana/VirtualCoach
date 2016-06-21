@@ -20,13 +20,24 @@
 }
 
 - (void)addKmeanEntryToDataSetFromFirstSpeedVectorsTab:(vect2darray_t *)speed1 andSecondSpeedVectorsTab:(vect2darray_t *)speed2 betweenInterval:(rect_t)interval andWithImageWidth:(uint16_t)width{
-
+    
     KmeanEntry * entry = [[KmeanEntry alloc] init];
     [entry generateDataEntryForKmeanFromFirstSpeedVectorsTab:speed1 andSecondSpeedVectorsTab:speed2 betweenInterval:interval andWithImageWidth:width];
     [_data insertObject:entry atIndex:_datacount];
     _datacount ++;
     entry.time = _datacount;
+    NSLog(@"time: %d", entry.time);
+    
+}
 
+- (void)addKmeanEntryToDataSetFromFirstSpeedVectorsTab:(vect2darray_t *)speed1 betweenFirstInterval:(rect_t)firstInterval andSecondSpeedVectorsTab:(vect2darray_t *)speed2 betweenSecondInterval:(rect_t)secondInterval andWithImageWidth:(uint16_t)width{
+    
+    KmeanEntry * entry = [[KmeanEntry alloc] init];
+    [entry generateDataEntryForKmeanFromFirstSpeedVectorsTab:speed1 betweenFirstInterval:firstInterval andSecondSpeedVectorsTab:speed2 betweenSecondInterval:secondInterval andWithImageWidth:width];
+    [_data insertObject:entry atIndex:_datacount];
+    _datacount ++;
+    entry.time = _datacount;
+    NSLog(@"time: %d", entry.time);
 }
 
 -(void)encodeWithCoder:(NSCoder *)aCoder
@@ -67,6 +78,69 @@
         
         for (NSInteger i =0; i<_datacount; i++) {
             NSString *line = [NSString stringWithFormat:@"%d %f\n", ((KmeanEntry *)[_data objectAtIndex:i]).time, ((KmeanEntry *)[_data objectAtIndex:i]).meanAcceleration];
+            const char * lineChar = line.UTF8String;
+            fputs(lineChar, fichier);
+        }
+        
+        fclose(fichier);
+    }
+    else{
+        NSLog(@"Your file %@ does not exist",path);
+    }
+    
+}
+
+- (void)writeKmeanDataset3dForTestAtPath:(NSString *)path{
+    
+    const char * pathChar = path.UTF8String;
+    FILE* fichier = NULL;
+    fichier = fopen(pathChar, "w+");
+    if (fichier != NULL){
+        
+        for (NSInteger i =0; i<_datacount; i++) {
+            NSString *line = [NSString stringWithFormat:@"%d %f %d\n", ((KmeanEntry *)[_data objectAtIndex:i]).time, ((KmeanEntry *)[_data objectAtIndex:i]).meanAcceleration, ((KmeanEntry *)[_data objectAtIndex:i]).maxAngle];
+            const char * lineChar = line.UTF8String;
+            fputs(lineChar, fichier);
+        }
+        
+        fclose(fichier);
+    }
+    else{
+        NSLog(@"Your file %@ does not exist",path);
+    }
+    
+}
+
+- (void)writeKmeanDataset4dForTestAtPath:(NSString *)path{
+    
+    const char * pathChar = path.UTF8String;
+    FILE* fichier = NULL;
+    fichier = fopen(pathChar, "w+");
+    if (fichier != NULL){
+        
+        for (NSInteger i =0; i<_datacount; i++) {
+            NSString *line = [NSString stringWithFormat:@"%d %f %d %f\n", ((KmeanEntry *)[_data objectAtIndex:i]).time, ((KmeanEntry *)[_data objectAtIndex:i]).meanAcceleration, ((KmeanEntry *)[_data objectAtIndex:i]).maxAngle, ((KmeanEntry *)[_data objectAtIndex:i]).meanSpeed];
+            const char * lineChar = line.UTF8String;
+            fputs(lineChar, fichier);
+        }
+        
+        fclose(fichier);
+    }
+    else{
+        NSLog(@"Your file %@ does not exist",path);
+    }
+    
+}
+
+- (void)writeKmeanDataset2dSpeedTimeForTestAtPath:(NSString *)path{
+    
+    const char * pathChar = path.UTF8String;
+    FILE* fichier = NULL;
+    fichier = fopen(pathChar, "w+");
+    if (fichier != NULL){
+        
+        for (NSInteger i =0; i<_datacount; i++) {
+            NSString *line = [NSString stringWithFormat:@"%d %f\n", ((KmeanEntry *)[_data objectAtIndex:i]).time, ((KmeanEntry *)[_data objectAtIndex:i]).meanSpeed];
             const char * lineChar = line.UTF8String;
             fputs(lineChar, fichier);
         }

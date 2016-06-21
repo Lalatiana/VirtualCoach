@@ -70,4 +70,18 @@
     XCTAssertEqual([motionResults isEqualToArray:motionsExpectedResults], YES);
 }
 
+- (void)testWithLostObject
+{
+    NSArray *motions = @[ @(0), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-2), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-2), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(-1), @(1) ];
+    
+    NSArray *motionsExpectedResults = @[ @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(-2), @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(0), @(-2), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1), @(1) ];
+    
+    _builder = [[TrackingRelevantSequencesBuilder alloc] initWithPartialMotionArray:motions motionImageFactor:10];
+    [_builder buildRelevantSequences];
+    
+    NSArray *motionResults = [_builder retreiveRelevantSequences];
+    
+    XCTAssertEqual([motionResults isEqualToArray:motionsExpectedResults], YES);
+}
+
 @end

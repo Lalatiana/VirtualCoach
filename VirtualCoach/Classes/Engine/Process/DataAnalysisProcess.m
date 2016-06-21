@@ -82,7 +82,7 @@
         
         _firstFrame = NULL;
         _secondFrame = NULL;
-//        _thirdFrame = NULL;
+        //        _thirdFrame = NULL;
         
         
         //tmp
@@ -174,7 +174,7 @@
                     _secondFrameBounds = playerBounds;
                     
                     vect2darray_t *speedVectors = opticalflow(_firstFrame, _secondFrame);
-                    
+                    /*
                     double w = 0, z = 0;
                     
                     for (NSUInteger y = _secondFrameBounds.start.y; y < _secondFrameBounds.end.y; y++)
@@ -190,7 +190,7 @@
                             speedVectors->data[idx].y = (_secondFrame->data[idx] > _binaryThreshold) * z;
                         }
                     }
-                    
+                    */
                     if (_firstSpeedVectorArray == NULL)
                     {
                         _firstSpeedVectorArray = speedVectors;
@@ -200,8 +200,8 @@
                     {
                         _secondSpeedVectorArray = speedVectors;
                         
-                        [_entryDataset addKmeanEntryToDataSetFromFirstSpeedVectorsTab:_firstSpeedVectorArray andSecondSpeedVectorsTab:_secondSpeedVectorArray betweenInterval:_secondFrameBounds andWithImageWidth:src->width];
-                        
+                        //[_entryDataset addKmeanEntryToDataSetFromFirstSpeedVectorsTab:_firstSpeedVectorArray andSecondSpeedVectorsTab:_secondSpeedVectorArray betweenInterval:_secondFrameBounds andWithImageWidth:src->width];
+                        [_entryDataset addKmeanEntryToDataSetFromFirstSpeedVectorsTab:_firstSpeedVectorArray betweenFirstInterval:_firstFrameBounds andSecondSpeedVectorsTab:_secondSpeedVectorArray betweenSecondInterval:_secondFrameBounds andWithImageWidth:src->width];
                         [_histogram generateHistogramFromSpeedVector:_firstSpeedVectorArray betweenInterval:_firstFrameBounds andWithImageWidth:src->width];
                         
                         vect2darrfree(_firstSpeedVectorArray);
@@ -268,14 +268,15 @@
             if (_videoTrakingAnalysisInformationsIndex  < _videoTrakingAnalysisInformations.count-1)
                 _videoTrakingAnalysisInformationsIndex++;
         }
-        
-        NSUInteger rate = (NSUInteger)(_frameCount / 100);
-        
-        if (_count % rate == 0)
-        {
-            [_delegate didUpdateStatusWithProgress:0.0025 message:[NSString stringWithFormat:@"Analyzing motions.. (%lu / %lu)", (unsigned long)_count, (unsigned long)_frameCount]];
-            NSLog(@"%@", [NSString stringWithFormat:@"Analyzing motions.. (%lu / %lu)", (unsigned long)_count, (unsigned long)_frameCount]);
-        }
+        /*
+         NSUInteger rate = (NSUInteger)(_frameCount / 100);
+         
+         if (_count % rate == 0)
+         {
+         [_delegate didUpdateStatusWithProgress:0.0025 message:[NSString stringWithFormat:@"Analyzing motions.. (%lu / %lu)", (unsigned long)_count, (unsigned long)_frameCount]];
+         NSLog(@"%@", [NSString stringWithFormat:@"Analyzing motions.. (%lu / %lu)", (unsigned long)_count, (unsigned long)_frameCount]);
+         }
+         */
     }
 }
 
@@ -286,7 +287,7 @@
         //temp
         _count++;
         
-        NSString *imagePathExport = [@"/Users/iSeven/Desktop/adrien_video/export3/" stringByAppendingPathComponent:[NSString stringWithFormat:@"%lu.pgm", (unsigned long)_count]];
+        NSString *imagePathExport = [@"/Volumes/ZORO 1/VideoTest/gray_2016-06-06_19.19.40/" stringByAppendingPathComponent:[NSString stringWithFormat:@"%lu.pgm", (unsigned long)_count]];
         
         NSDictionary *imageDict = [_videoTrakingAnalysisInformations objectAtIndex:_videoTrakingAnalysisInformationsIndex];
         NSNumber *imageId = [imageDict objectForKey:@"imageId"];
@@ -301,7 +302,7 @@
         
         if (_count == imageId.unsignedIntValue)
         {
-            _videoTrakingAnalysisInformationsIndex++;
+            //_videoTrakingAnalysisInformationsIndex++;
             
             NSNumber *startX = [imageDict objectForKey:@"start.x"];
             NSNumber *startY = [imageDict objectForKey:@"start.y"];
@@ -320,6 +321,8 @@
             bds.end.x = endX.unsignedIntValue;
             
             drawrctgray8i(src, bds, c);
+            if (_videoTrakingAnalysisInformationsIndex  < _videoTrakingAnalysisInformations.count-1)
+                _videoTrakingAnalysisInformationsIndex++;
         }
         
         pgmwrite(src, [imagePathExport cStringUsingEncoding:NSASCIIStringEncoding], PGM_BINARY);

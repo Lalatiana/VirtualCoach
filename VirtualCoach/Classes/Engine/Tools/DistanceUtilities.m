@@ -16,10 +16,28 @@
     return result;
 }
 
++ (double) euclidianDistance2DWithWeightForAccelerationBetweenFirstKmeanEntry:(KmeanEntry *)firstPoint andSecondKmeanEntry:(KmeanEntry *)secondPoint{
+    
+    double result=0;
+    int weightForAcceleration = 1000;
+    result = sqrt( (weightForAcceleration * pow((secondPoint.time-firstPoint.time),2) )+ ((1/1000000) * pow((secondPoint.meanAcceleration-firstPoint.meanAcceleration),2)));
+    return result;
+    
+}
+
 + (double) euclidianDistance3DBetweenFirstKmeanEntry:(KmeanEntry *)firstPoint andSecondKmeanEntry:(KmeanEntry *)secondPoint{
     double result=0;
     result = sqrt(pow((secondPoint.time-firstPoint.time),2)+pow((secondPoint.meanAcceleration-firstPoint.meanAcceleration),2)+pow((secondPoint.maxAngle-firstPoint.maxAngle),2));
     return result;
+}
+
++ (double) euclidianDistance3DWithWeightForAccelerationBetweenFirstKmeanEntry:(KmeanEntry *)firstPoint andSecondKmeanEntry:(KmeanEntry *)secondPoint{
+    
+    double result=0;
+    int weightForAcceleration = 1000;
+    result = sqrt( (weightForAcceleration * pow((secondPoint.time-firstPoint.time),2) )+pow((secondPoint.meanAcceleration-firstPoint.meanAcceleration),2)+pow((secondPoint.maxAngle-firstPoint.maxAngle),2));
+    return result;
+    
 }
 
 + (double) manhattanDistance2DBetweenFirstKmeanEntry:(KmeanEntry *)firstPoint andSecondKmeanEntry:(KmeanEntry *)secondPoint{

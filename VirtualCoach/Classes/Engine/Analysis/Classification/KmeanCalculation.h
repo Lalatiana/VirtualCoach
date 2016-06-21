@@ -11,7 +11,7 @@
 #import "Cluster.h"
 #import "DistanceUtilities.h"
 
-@interface KmeanCalculation : NSObject
+@interface KmeanCalculation : NSObject <NSCoding>
 
 @property (nonatomic) KmeanEntryDataSet * dataEntries;
 @property (nonatomic) NSMutableArray * clusters;
@@ -31,7 +31,10 @@
  */
 - (instancetype)initKmeanCalculationWithPathOfDataEntries:(NSString *)path andClusterCount:(int)clusterCount;
 
+- (instancetype)initKmeanCalculationWithKmeanEntryDataSet:(KmeanEntryDataSet *)dataSet andClusterCount:(int)clusterCount;
 
 - (void)kmeanProcessWithMaxIteration:(int)maxIteration;
+
+- (void)writeKmeanCalculationForTestAtPath:(NSString *)path;
 
 @end

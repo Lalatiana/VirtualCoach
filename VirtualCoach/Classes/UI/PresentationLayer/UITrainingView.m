@@ -30,6 +30,7 @@
         _playersPanelLabel = [[UIBaseLabel alloc] init];
         
         _processVideoProgressView = [[UIProcessProgressView alloc] init];
+        _multipleProcessVideoProgressView = [[UIMultipleProcessProgressView alloc] init];
     }
     
     return self;
@@ -176,9 +177,16 @@
     // setting process progress view
     
     CGSize processVideoProgressViewSize = CGSizeMake(350, 150);
-    CGPoint processVideoProgressViewOrigin = CGPointMake(([UIScreen mainScreen].bounds.size.width - processAllVideosButtonSize.width) / 2, ([UIScreen mainScreen].bounds.size.height - processAllVideosButtonSize.height) / 2);
+    CGPoint processVideoProgressViewOrigin = CGPointMake(([UIScreen mainScreen].bounds.size.width - processVideoProgressViewSize.width) / 2, ([UIScreen mainScreen].bounds.size.height - processVideoProgressViewSize.height) / 2);
     
     [_processVideoProgressView setFrame:CGRectMake(processVideoProgressViewOrigin.x, processVideoProgressViewOrigin.y, processVideoProgressViewSize.width, processVideoProgressViewSize.height)];
+    
+    // setting multiple process progress view
+    
+    CGSize multipleProcessVideoProgressViewSize = CGSizeMake(350, (processVideoProgressViewSize.height * 2) - defaultMargin);
+    CGPoint multipleProcessVideoProgressViewOrigin = CGPointMake(([UIScreen mainScreen].bounds.size.width - multipleProcessVideoProgressViewSize.width) / 2, ([UIScreen mainScreen].bounds.size.height - multipleProcessVideoProgressViewSize.height) / 2);
+    
+    [_multipleProcessVideoProgressView setFrame:CGRectMake(multipleProcessVideoProgressViewOrigin.x, multipleProcessVideoProgressViewOrigin.y, multipleProcessVideoProgressViewSize.width, multipleProcessVideoProgressViewSize.height)];
 }
 
 - (void)layout
@@ -190,6 +198,7 @@
     [self prepareForUse];
     
     [_processVideoProgressView layout];
+    [_multipleProcessVideoProgressView layout];
     
     [self addSubview:_trainingsTableView];
     [self addSubview:_playersTableView];

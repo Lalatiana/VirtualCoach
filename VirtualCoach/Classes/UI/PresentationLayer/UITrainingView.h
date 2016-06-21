@@ -10,6 +10,7 @@
 #import "UIBaseLabel.h"
 #import "UIBaseButton.h"
 #import "UIProcessProgressView.h"
+#import "UIMultipleProcessProgressView.h"
 
 #import <Quartzcore/QuartzCore.h>
 
@@ -36,5 +37,6 @@
 @property (nonatomic, strong) UIBaseButton *watchSelectedVideoButton;
 
 @property (nonatomic, strong) UIProcessProgressView *processVideoProgressView;
+@property (nonatomic, strong) UIMultipleProcessProgressView *multipleProcessVideoProgressView;
 
 @end

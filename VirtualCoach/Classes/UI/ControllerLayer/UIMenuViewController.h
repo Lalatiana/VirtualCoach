@@ -11,7 +11,7 @@
 #import "UIApplicationNavigationViewController.h"
 #import "UICaptureSessionViewController.h"
 #import "UITrainingViewController.h"
-
+#import "UIProfileViewController.h"
 
 @interface UIMenuViewController : UIBaseViewController
 
@@ -20,5 +20,6 @@
 - (void)captureViewButtonAction;
 - (void)trainingViewButtonAction;
 - (void)playerViewButtonAction;
+- (void)profileButtonAction;
 
 @end

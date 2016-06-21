@@ -38,4 +38,9 @@
     [super drawRect:dirtyRect];
 }
 
+- (void)undraw
+{
+    
+}
+
 @end

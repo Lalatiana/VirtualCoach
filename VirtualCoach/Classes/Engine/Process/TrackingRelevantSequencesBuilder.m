@@ -49,11 +49,23 @@
         
         int newValue = (currentMarker == 0 && previousMarker == 0) ? 0 : 1;
         
+        if (currentMarker == 0 && previousMarker == 0)
+            newValue = 0;
+        
+        else if (currentMarker == -2 && previousMarker == -2)
+            newValue = 0;
+        
+        else if (currentMarker == 0 && previousMarker == -2)
+            newValue = 0;
+        
+        else if (currentMarker == -2 && previousMarker == 0)
+            newValue = 0;
+        
+        else
+            newValue = 1;
+        
         for (NSUInteger k = previousMarkerIndex + 1; k < currentMarkerIndex; k++)
-        {
-            if (((NSNumber *)[finalObjectsMotion objectAtIndex:k]).intValue != -2)
-                [finalObjectsMotion replaceObjectAtIndex:k withObject:[NSNumber numberWithInt:newValue]];
-        }
+            [finalObjectsMotion replaceObjectAtIndex:k withObject:[NSNumber numberWithInt:newValue]];
         
         previousMarker = currentMarker;
         previousMarkerIndex = currentMarkerIndex;

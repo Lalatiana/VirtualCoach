@@ -14,8 +14,9 @@
 #import "UIMenuViewController.h"
 #import "UIPlayerViewController.h"
 #import "CaptureProcessManager.h"
+#import "UIProfileViewController.h"
 
-@class UIHomeViewController, UICaptureSessionViewController, UIAuthenticationViewController, UIAccountCreationViewController, UITrainingViewController, UIMenuViewController;
+@class UIHomeViewController, UICaptureSessionViewController, UIAuthenticationViewController, UIAccountCreationViewController, UITrainingViewController, UIMenuViewController, UIProfileViewController;
 
 @interface UIApplicationNavigationViewController : UINavigationController
 
@@ -25,5 +26,6 @@
 @property (nonatomic, strong) UITrainingViewController *trainingViewController;
 @property (nonatomic, strong) UIMenuViewController *menuViewController;
 @property (nonatomic, strong) UIPlayerViewController *playerViewController;
+@property (nonatomic, strong) UIProfileViewController *profileViewController;
 
 @end

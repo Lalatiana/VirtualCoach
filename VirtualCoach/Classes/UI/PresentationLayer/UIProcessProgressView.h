@@ -14,4 +14,6 @@
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIBaseLabel *progressLabel;
 
+- (void)prepareView;
+
 @end

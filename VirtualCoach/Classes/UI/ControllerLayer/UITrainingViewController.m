@@ -8,6 +8,12 @@
 
 #import "UITrainingViewController.h"
 
+@interface UITrainingViewController ()
+
+@property (nonatomic, assign) BOOL isMultipleProcess;
+
+@end
+
 @implementation UITrainingViewController
 
 - (instancetype)init
@@ -35,6 +41,8 @@
         self.view = _trainingView;
         
         self.navigationItem.title = @"Trainings";
+        
+        _isMultipleProcess = NO;
     }
     
     return self;
@@ -101,6 +109,8 @@
                                handler:^(UIAlertAction * action)
                                {
                                    // process video
+                                   
+                                   _isMultipleProcess = NO;
                                    
                                    NSString *videoName = [parentCell.textLabel text];
                                    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -187,14 +197,188 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)processAllVideosButtonAction
+{
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:@"Process all videos ?"
+                                  message:@"Processing all videos may take a lot of time. Are you sure ?"
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                               actionWithTitle:@"Process all"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action)
+                               {
+                                   _isMultipleProcess = YES;
+                                   
+                                   // process all videos
+                                   
+                                   NSMutableArray *allVideos = [NSMutableArray array];
+                                   
+                                   // dictionary that will contains all video results (key is video name)
+                                   
+                                   NSMutableDictionary *allVideosResult = [NSMutableDictionary dictionary];
+                                   
+                                   // have to fill this array with all non processed videos
+                                   
+                                   [allVideos addObject:@"2016-06-06_19.19.40"];
+                                   [allVideos addObject:@"2016-06-06_19.19.41"];
+                                   [allVideos addObject:@"2016-06-06_19.19.42"];
+                                   [allVideos addObject:@"2016-06-06_19.19.43"];
+                                   
+                                   CGFloat progressPerVideo = 1.f / allVideos.count;
+                                   
+                                   // we display the global process view with GCD
+                                   
+                                   dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           [_trainingView addSubview:_trainingView.multipleProcessVideoProgressView alignment:UIViewCentered];
+                                       });
+                                   });
+                                   
+                                   // we loop through the allVideos array and process each video on a background thread
+                                   
+                                   dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                                       
+                                       for (NSUInteger i = 0; i < allVideos.count; i++)
+                                       {
+                                           // we update the UI on the main thread synchronously
+                                           
+                                           dispatch_sync(dispatch_get_main_queue(), ^{
+                                               
+                                               [_trainingView.multipleProcessVideoProgressView.progressView setProgress:0.f animated:YES];
+                                               
+                                               NSDictionary *attributes = [(NSAttributedString *)_trainingView.multipleProcessVideoProgressView.globalProgressLabel.attributedText attributesAtIndex:0 effectiveRange:NULL];
+                                               _trainingView.multipleProcessVideoProgressView.globalProgressLabel.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"Processing video... (%u / %lu)", i+1, (unsigned long)allVideos.count] attributes:attributes];
+                                           });
+                                           
+                                           // we extract video informations to prepare the process (always in a synchronous way)
+                                           
+                                           dispatch_sync(dispatch_get_global_queue(0, 0), ^{
+                                               
+                                               NSString *videoName = [allVideos objectAtIndex:i];
+                                               NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                                               
+                                               NSString *videoDataFilePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-data.plist", videoName]];
+                                               
+                                               NSDictionary *videoInfo = [[NSDictionary alloc] initWithContentsOfFile:videoDataFilePath];
+                                               
+                                               // workaround to update data file of example video as the application id changes everytime (so does the data file path) ...
+                                               
+                                               NSMutableDictionary *videoInfoMutable = [videoInfo mutableCopy];
+                                               
+                                               [videoInfoMutable setObject:[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mov", videoName]] forKey:@"videoPath"];
+                                               
+                                               [videoInfoMutable setObject:[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-reference.pgm", videoName]] forKey:@"referenceFramePath"];
+                                               
+                                               videoInfo = [videoInfoMutable copy];
+                                               
+                                               // end workaround
+                                               
+                                               NSUInteger serviceCount = 0, forehandCount = 0, backhandCount = 0;
+                                               
+                                               VideoProcess *vidProc;
+                                               
+                                               vidProc = [[VideoProcess alloc] initWithDictionary:videoInfo];
+                                               [vidProc setDelegate:self];
+                                               
+                                               vidProc.samplingCount = 10;
+                                               vidProc.overlappingRate = 0.6;
+                                               vidProc.scale = 0.5;
+                                               vidProc.shouldDeleteIrrelevantSequences = YES;
+                                               
+                                               [vidProc setup];
+                                               [vidProc start];
+                                               
+                                               /**
+                                                
+                                                Retreive result datas and process them with RequestEngine
+                                                
+                                                **/
+                                               
+                                               serviceCount = [vidProc.dataAnalysisProcess serviceCount];
+                                               forehandCount = [vidProc.dataAnalysisProcess forehandCount];
+                                               backhandCount = [vidProc.dataAnalysisProcess backhandCount];
+                                               
+                                               NSArray *videoResultKey = [NSArray arrayWithObjects:@"forehandCount", @"backhandCount", @"serviceCount", nil];
+                                               
+                                               NSArray *videoResultObject = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:forehandCount], [NSNumber numberWithUnsignedInteger:backhandCount], [NSNumber numberWithUnsignedInteger:serviceCount], nil];
+                                               
+                                               // we save the results in the allVideosResult dictionnary
+                                               // more will be saved, for example the comparison results
+                                               
+                                               [allVideosResult setObject:[NSDictionary dictionaryWithObjects:videoResultObject forKeys:videoResultKey] forKey:videoName];
+                                           });
+                                           
+                                           // we update the UI on the main thread
+                                           
+                                           dispatch_sync(dispatch_get_main_queue(), ^{
+                                               
+                                               [_trainingView.multipleProcessVideoProgressView.globalProgressView setProgress:(i+1) * progressPerVideo animated:YES];
+                                           });
+                                       }
+                                       
+                                       // we remove the progerss view and update the videos cell with the results
+                                       
+                                       dispatch_sync(dispatch_get_main_queue(), ^{
+                                           
+                                           [_trainingView.multipleProcessVideoProgressView removeFromSuperview];
+                                           
+                                           for (NSUInteger j = 0; j < [_trainingView.videosTableView numberOfRowsInSection:0]; j++)
+                                           {
+                                               UITableViewCell *cell = [_trainingView.videosTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:0]];
+                                               
+                                               for (NSUInteger j = 0; j < allVideos.count; j++)
+                                               {
+                                                   NSString *video = [allVideos objectAtIndex:j];
+                                                   
+                                                   if ([cell.textLabel.text isEqualToString:video])
+                                                   {
+                                                       NSDictionary *videoResult = [allVideosResult objectForKey:video];
+                                                       NSNumber *serviceCount = (NSNumber *)[videoResult objectForKey:@"serviceCount"];
+                                                       NSNumber *forehandCount = (NSNumber *)[videoResult objectForKey:@"forehandCount"];
+                                                       NSNumber *backhandCount = (NSNumber *)[videoResult objectForKey:@"backhandCount"];
+                                                       
+                                                       [cell.detailTextLabel setText:[NSString stringWithFormat:@"Length: 1:13\nForehand : %d, backhand : %d, service : %d", forehandCount.intValue, backhandCount.intValue, serviceCount.intValue]];
+                                                       
+                                                       // we should disable the process button for each cell of a processed video
+                                                       
+//                                                       for (UIView *cellSubview in cell.subviews)
+//                                                       {
+//                                                           if ([cellSubview isMemberOfClass:[UIBaseButton class]])
+//                                                           {
+//                                                               <#statements#>
+//                                                           }
+//                                                       }
+                                                   }
+                                               }
+                                           }
+                                       });
+                                   });
+                               }];
+    
+    UIAlertAction* cancelButton = [UIAlertAction
+                                   actionWithTitle:@"Cancel"
+                                   style:UIAlertActionStyleCancel
+                                   handler:^(UIAlertAction * action)
+                                   {
+                                       // do nothing
+                                   }];
+    
+    [alert addAction:okButton];
+    [alert addAction:cancelButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)removeVideoButtonAction:(UIBaseButton *)sender
 {
     UITableViewCell *parentCell = (UITableViewCell *)[sender superview];
     
     UIAlertController * alert = [UIAlertController
-                                  alertControllerWithTitle:@"Delete video ?"
-                                  message:[NSString stringWithFormat:@"The video %@ will be permanently deleted. Are you sure ?", parentCell.textLabel.text]
-                                  preferredStyle:UIAlertControllerStyleAlert];
+                                 alertControllerWithTitle:@"Delete video ?"
+                                 message:[NSString stringWithFormat:@"The video %@ will be permanently deleted. Are you sure ?", parentCell.textLabel.text]
+                                 preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* okButton = [UIAlertAction
                                actionWithTitle:@"Delete"
@@ -231,35 +415,6 @@
     
     [alert addAction:cancelButton];
     [alert addAction:okButton];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)processAllVideosButtonAction
-{
-    UIAlertController * alert=   [UIAlertController
-                                  alertControllerWithTitle:@"Process all videos ?"
-                                  message:@"Processing all videos may take a lot of time. Are you sure ?"
-                                  preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction* okButton = [UIAlertAction
-                               actionWithTitle:@"Process all"
-                               style:UIAlertActionStyleDefault
-                               handler:^(UIAlertAction * action)
-                               {
-                                   // process all videos
-                               }];
-    
-    UIAlertAction* cancelButton = [UIAlertAction
-                                   actionWithTitle:@"Cancel"
-                                   style:UIAlertActionStyleCancel
-                                   handler:^(UIAlertAction * action)
-                                   {
-                                       // do nothing
-                                   }];
-    
-    [alert addAction:okButton];
-    [alert addAction:cancelButton];
     
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -388,14 +543,14 @@
         
         UIBaseButton *processButton = [UIBaseButton buttonWithType:UIButtonTypeCustom];
         [processButton setFrame:CGRectMake(playButton.frame.origin.x + playButton.frame.size.width + 10, playButton.frame.origin.y, playButtonSize.width, playButtonSize.height)];
-        [processButton setImage:[UIImage imageNamed:@"deleteVideoIcon.png"] forState:UIControlStateNormal];
-        [processButton addTarget:self action:@selector(removeVideoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [processButton setImage:[UIImage imageNamed:@"processIcon.png"] forState:UIControlStateNormal];
+        [processButton addTarget:self action:@selector(processVideoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:processButton];
         
         UIBaseButton *removeButton = [UIBaseButton buttonWithType:UIButtonTypeCustom];
         [removeButton setFrame:CGRectMake(processButton.frame.origin.x + processButton.frame.size.width + 10, processButton.frame.origin.y, playButtonSize.width, playButtonSize.height)];
-        [removeButton setImage:[UIImage imageNamed:@"processIcon.png"] forState:UIControlStateNormal];
-        [removeButton addTarget:self action:@selector(processVideoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [removeButton setImage:[UIImage imageNamed:@"deleteVideoIcon.png"] forState:UIControlStateNormal];
+        [removeButton addTarget:self action:@selector(removeVideoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:removeButton];
     }
     
@@ -431,7 +586,8 @@
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            UIProgressView *progressView = _trainingView.processVideoProgressView.progressView;
+            UIProcessProgressView *processProgressView = _isMultipleProcess ? _trainingView.multipleProcessVideoProgressView : _trainingView.processVideoProgressView;
+            UIProgressView *progressView = processProgressView.progressView;
             [progressView setProgress:progressView.progress + progress animated:YES];
         });
     }
@@ -442,8 +598,9 @@
             
             if ([_trainingView.processVideoProgressView.progressLabel.attributedText length])
             {
-                NSDictionary *attributes = [(NSAttributedString *)_trainingView.processVideoProgressView.progressLabel.attributedText attributesAtIndex:0 effectiveRange:NULL];
-                _trainingView.processVideoProgressView.progressLabel.attributedText = [[NSAttributedString alloc] initWithString:message attributes:attributes];
+                UIProcessProgressView *processProgressView = _isMultipleProcess ? _trainingView.multipleProcessVideoProgressView : _trainingView.processVideoProgressView;
+                NSDictionary *attributes = [(NSAttributedString *)processProgressView.progressLabel.attributedText attributesAtIndex:0 effectiveRange:NULL];
+                processProgressView.progressLabel.attributedText = [[NSAttributedString alloc] initWithString:message attributes:attributes];
             }
         });
     }

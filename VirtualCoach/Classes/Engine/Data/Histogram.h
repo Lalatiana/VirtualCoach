@@ -9,7 +9,13 @@
 #import <Foundation/Foundation.h>
 #include <geometry.h>
 #include <core.h>
- 
+
+//#define THRESHOLD_HISTOGRAM 0.000005
+//#define THRESHOLD_NORM_SPEED_VECTORS 0.000005
+
+#define THRESHOLD_HISTOGRAM 0.0
+#define THRESHOLD_NORM_SPEED_VECTORS 0.0
+
 @interface Histogram : NSObject <NSCoding>
 
 @property (nonatomic) NSMutableArray * data;

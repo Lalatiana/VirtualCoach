@@ -33,6 +33,11 @@
 - (void)prepareForUse
 {
     [_menuView layout];
+    
+    [_menuView.profileButton setTarget:self];
+    [_menuView.profileButton setAction:@selector(profileButtonAction)];
+    
+    self.navigationItem.rightBarButtonItem = _menuView.profileButton;
 }
 
 - (void)captureViewButtonAction
@@ -54,6 +59,13 @@
     UIApplicationNavigationViewController *nav = (UIApplicationNavigationViewController *)self.navigationController;
     
     [nav pushViewController:nav.playerViewController animated:YES];
+}
+
+- (void)profileButtonAction
+{
+    UIApplicationNavigationViewController *nav = (UIApplicationNavigationViewController *)self.navigationController;
+    
+    [nav pushViewController:nav.profileViewController animated:YES];
 }
 
 @end

@@ -46,7 +46,7 @@
     [_presentationTextView setScrollEnabled:NO];
     [_presentationTextView setEditable:NO];
     
-    NSMutableAttributedString *presentationText = [[NSMutableAttributedString alloc] initWithString:@"Manage your players easily\n\n\nSet up the interface according with your preferences\n\n\nFollow your players's progression with wonderful curves\n\n\nBla bla bla"];
+    NSMutableAttributedString *presentationText = [[NSMutableAttributedString alloc] initWithString:@"Manage your players easily\n\n\nSet up the interface according with to preferences\n\n\nFollow your players's progression with wonderful curves\n\n\nBla bla bla"];
     [presentationText addAttribute:NSForegroundColorAttributeName
                              value:[UIColor whiteColor]
                              range:NSMakeRange(0, presentationText.length)];

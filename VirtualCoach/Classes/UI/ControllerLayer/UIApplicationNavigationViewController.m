@@ -23,12 +23,14 @@
         _trainingViewController = [[UITrainingViewController alloc] init];
         _menuViewController = [[UIMenuViewController alloc] init];
         _playerViewController = [[UIPlayerViewController alloc] init];
+        _profileViewController = [[UIProfileViewController alloc] init];
         
         [_authenticationViewController prepareForUse];
         [_accountCreationViewController prepareForUse];
         [_trainingViewController prepareForUse];
         [_menuViewController prepareForUse];
         [_playerViewController prepareForUse];
+        [_profileViewController prepareForUse];
         
         CaptureProcessManager *captureProcessManager = [CaptureProcessManager sharedInstance];
         _captureSessionViewController = [[UICaptureSessionViewController alloc] initWithSessionController:[captureProcessManager captureSessionController]];
