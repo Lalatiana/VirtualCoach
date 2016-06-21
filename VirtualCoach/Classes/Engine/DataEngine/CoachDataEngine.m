@@ -68,7 +68,12 @@
                 if([onePlayer[3][0] intValue] == 1){
                     leftHanded = NO;
                 }
-                playerDO = [[PlayerDO alloc] initWithId:[playesId[0][p] intValue] andName:onePlayer[1][0] andFirstName:onePlayer[2][0] andLeftHanded:leftHanded andStatistics:nil andTrophies:nil];
+                playerDO = [[PlayerDO alloc] initWithId:[playesId[0][p] intValue]
+                                                andName:onePlayer[1][0]
+                                           andFirstName:onePlayer[2][0]
+                                          andLeftHanded:leftHanded
+                                          andStatistics:nil
+                                            andTrophies:nil];
                 [arrayPlayerDO addObject:playerDO];
                 
             }
@@ -88,21 +93,39 @@
                     if([videosRef[3][kk] integerValue] == 1){
                         removed= NO;
                     }
-                    
-                    // @Lala
-                    // Replace the following variables with real day, month and year
-                    int day = 0;
-                    int month = 0;
-                    int year = 0;
+                  
                     
                     int idVideoRef = [videosRef[0][kk] intValue];
-                    videoRefDO = [[ReferenceVideoDO alloc] initWithId:idVideoRef andName:videosRef[1][kk] andProcessed:processed andRemoved:removed andDay:day andMonth:month
-                                                              andYear:year andReferenceMovements:nil];
+                    int day = [videosRef[4][kk] intValue];
+                    int month = [videosRef[5][kk] intValue];
+                    int year = [videosRef[6][kk] intValue];
+                    videoRefDO = [[ReferenceVideoDO alloc] initWithId:idVideoRef
+                                                              andName:videosRef[1][kk]
+                                                         andProcessed:processed
+                                                           andRemoved:removed
+                                                               andDay:day
+                                                             andMonth:month
+                                                              andYear:year
+                                                andReferenceMovements:0];
+                    
                     [arrayVideoReferenceDO addObject:videoRefDO];
                 }
             }
             
-            coachDO = [[CoachDO alloc] initWithCoachId:(int)[[allCoaches objectAtIndex:0] objectAtIndex:j] andName:allCoaches[1][j] andFirstName:allCoaches[2][j] andLogin:allCoaches[4][j] andPassword:allCoaches[5][j] andLeftHanded:allCoaches[3][j] andPlayers:arrayPlayerDO andReferenceVideos:arrayVideoReferenceDO];
+            bool leftHanded = YES;
+            if([allCoaches[3][j]  intValue] == 1){
+                leftHanded = NO;
+            }
+            
+             int idCoachId = [allCoaches[0][j] intValue];
+            coachDO = [[CoachDO alloc] initWithCoachId:idCoachId
+                                               andName:allCoaches[1][j]
+                                          andFirstName:allCoaches[2][j]
+                                              andLogin:allCoaches[4][j]
+                                           andPassword:allCoaches[5][j]
+                                         andLeftHanded:leftHanded
+                                            andPlayers:arrayPlayerDO
+                                    andReferenceVideos:arrayVideoReferenceDO];
             
             [arrayCoachDO addObject:coachDO];
             
@@ -112,6 +135,37 @@
     NSLog(@"Size: result: %lu", (unsigned long)arrayCoachDO.count);
     return arrayCoachDO;
     
+}
+
+-(NSMutableArray<CoachDO*>*)selectOnlyAllCoaches
+{
+    CoachDO *coachDO;
+    NSMutableArray<CoachDO*> *arrayCoachDO = [[NSMutableArray<CoachDO*> alloc] init];
+    
+     NSArray *allCoaches = [_coachDAO allCoaches];
+    
+    for(int i = 0; i<[allCoaches count]; i++){
+        for(int j = 0; j<[allCoaches[i] count]; j++){
+            
+            bool leftHanded = YES;
+            if([allCoaches[3][j]  intValue] == 1){
+                leftHanded = NO;
+            }
+            
+            coachDO = [[CoachDO alloc] initWithCoachId:(int)[[allCoaches objectAtIndex:0] objectAtIndex:j]
+                                               andName:allCoaches[1][j]
+                                          andFirstName:allCoaches[2][j]
+                                              andLogin:allCoaches[4][j]
+                                           andPassword:allCoaches[5][j]
+                                         andLeftHanded:leftHanded
+                                            andPlayers:nil
+                                    andReferenceVideos:nil];
+            
+            [arrayCoachDO addObject:coachDO];
+        }
+    }
+    
+    return arrayCoachDO;
 }
 
 //DELETE

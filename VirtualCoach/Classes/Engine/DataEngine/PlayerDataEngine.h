@@ -18,7 +18,8 @@
 -(id)insertPlayer:(PlayerDO *)playerDO;
 //SELECT
 -(NSMutableArray<PlayerDO*>*)selectAllPlayers;
+-(PlayerDO*) selectPlayerById:(int)idP;
 //DELETE
--(id)deletePlayerId:(PlayerDO*)playerDO;
+-(id)deletePlayerId:(int)idP;
 
 @end

@@ -32,13 +32,13 @@
 {
     NSMutableArray<PlayerDO*> *arrayPlayerDO;
     PlayerDO *playerDO;
-    PlayerDAO *playerDAO;
+    PlayerDAO *playerDAO = [[PlayerDAO alloc]init];
     NSMutableArray<StatisticalDO*> *arrayStatDO;
     StatisticalDO *statDO;
-    StatisticalDAO *statDAO;
-    NSMutableArray<TrophyDO*> *arrayTrophyDO;
-    TrophyDO *trophyDO;
-    TrophyDAO *trophyDAO;
+    StatisticalDAO *statDAO = [[StatisticalDAO alloc]init];
+   // NSMutableArray<TrophyDO*> *arrayTrophyDO;
+   // TrophyDO *trophyDO;
+   // TrophyDAO *trophyDAO = [[TrophyDAO alloc]init];
     
     NSArray *players = [playerDAO allPlayers];
     
@@ -47,18 +47,18 @@
             
             NSArray *oneStat = [statDAO searchByIdPlayer:players[0][j]];
             
-            statDO = [statDO initWithId:(int)[[oneStat objectAtIndex:0] objectAtIndex:0]
-                       andForehandCount:(int)[[oneStat objectAtIndex:1] objectAtIndex:0]
-                       andBackhandCount:(int)[[oneStat objectAtIndex:2] objectAtIndex:0]
-                        andServiceCount:(int)[[oneStat objectAtIndex:3] objectAtIndex:0]
-                          andWinningRun:(int)[[oneStat objectAtIndex:4] objectAtIndex:0]
-                          andLoosingRun:(int)[[oneStat objectAtIndex:5] objectAtIndex:0]
+            statDO = [statDO initWithId:((NSNumber *)[[oneStat objectAtIndex:0] objectAtIndex:0]).intValue
+                       andForehandCount:((NSNumber *)[[oneStat objectAtIndex:1] objectAtIndex:0]).intValue
+                       andBackhandCount:((NSNumber *)[[oneStat objectAtIndex:2] objectAtIndex:0]).intValue
+                        andServiceCount:((NSNumber *)[[oneStat objectAtIndex:3] objectAtIndex:0]).intValue
+                          andWinningRun:((NSNumber *)[[oneStat objectAtIndex:4] objectAtIndex:0]).intValue
+                          andLoosingRun:((NSNumber *)[[oneStat objectAtIndex:5] objectAtIndex:0]).intValue
            andForehandGlobalSuccessRate:[[[oneStat objectAtIndex:6] objectAtIndex:0 ]floatValue]
            andBackhandGlobalSuccessRate:[[[oneStat objectAtIndex:7] objectAtIndex:0] floatValue]
             andServiceGlobalSuccessRate:[[[oneStat objectAtIndex:8] objectAtIndex:0] floatValue]
-                                 andDay:(int)[[oneStat objectAtIndex:9] objectAtIndex:0]
-                               andMonth:(int)[[oneStat objectAtIndex:10] objectAtIndex:0]
-                                andYear:(int)[[oneStat objectAtIndex:11] objectAtIndex:0]
+                                 andDay:((NSNumber *)[[oneStat objectAtIndex:9] objectAtIndex:0]).intValue
+                               andMonth:((NSNumber *)[[oneStat objectAtIndex:10] objectAtIndex:0]).intValue
+                                andYear:((NSNumber *)[[oneStat objectAtIndex:11] objectAtIndex:0]).intValue
                       ];
             
             [arrayStatDO addObject:statDO];
@@ -73,7 +73,13 @@
                 leftHanded = YES;
             }
             
-            playerDO = [playerDO initWithId:players[0][j] andName:players[1][j] andFirstName:players[2][j] andLeftHanded:leftHanded andStatistics:statDO andTrophies:nil];
+            int idPlayerId = [players[0][j] intValue];
+            playerDO = [[PlayerDO alloc] initWithId:idPlayerId
+                                            andName:players[1][j]
+                                       andFirstName:players[2][j]
+                                      andLeftHanded:leftHanded
+                                      andStatistics:arrayStatDO
+                                        andTrophies:0];
             
             [arrayPlayerDO addObject:playerDO];
         }
@@ -82,10 +88,26 @@
     return arrayPlayerDO;
 }
 
-//DELETE
--(id)deletePlayerId:(PlayerDO*)playerDO
+-(PlayerDO*) selectPlayerById:(int)idP
 {
-    return [_playerDAO deletePlayerById:[NSString stringWithFormat:@"%i", playerDO.playerId]];
+    PlayerDAO *playerDAO = [[PlayerDAO alloc]init];
+    PlayerDO *playerDO;
+    
+    
+    NSArray *players = [playerDAO searchPlayerById:[NSString stringWithFormat:@"%i", idP]];
+    
+    playerDO.playerId = idP;
+    playerDO.name = players[1][0];
+    playerDO.firstName = players[2][0];
+    playerDO.leftHanded = players[3][0];
+    
+    return playerDO;
+}
+
+//DELETE
+-(id)deletePlayerId:(int)idP
+{
+    return [_playerDAO deletePlayerById:[NSString stringWithFormat:@"%i", idP]];
 }
     
 @end

@@ -16,7 +16,8 @@
 
 @property (nonatomic) NSString * databasePath;
 @property (nonatomic) CoachDataEngine *coachDE;
-@property (nonatomic) CoachDO *coachDO;
+@property (nonatomic) CoachDO *coachDO1;
+@property (nonatomic) CoachDO *coachDO2;
 @property (nonatomic) CheckDatabaseDAO *checkDB;
 @property (nonatomic) NSString * sqlPath;
 
@@ -41,7 +42,8 @@
     NSLog(@"\n\n\n\n\n");
     
     _coachDE = [[CoachDataEngine alloc] init];
-    _coachDO = [[CoachDO alloc]init];
+    _coachDO1 = [[CoachDO alloc]init];
+    _coachDO2 = [[CoachDO alloc]init];
     _checkDB = [[CheckDatabaseDAO alloc]init];
 }
 
@@ -63,39 +65,65 @@
     NSLog(@"CHECK: %d", check);
     
     /********************************************INSERT*************************************************************/
-    _coachDO = [[CoachDO alloc] initWithCoachId:nil andName:@"Adrien" andFirstName:@"LESUR" andLogin:@"lesura" andPassword:@"adidi" andLeftHanded:YES andPlayers:NULL andReferenceVideos:NULL];
+    _coachDO1.name = @"Adrien";
+    _coachDO1.firstName = @"LESUR";
+    _coachDO1.login = @"lesura";
+    _coachDO1.password = @"adidi";
+    _coachDO1.leftHanded = YES;
     
-    NSNumber *insertCoachDE = (NSNumber *)[_coachDE insertCoach:_coachDO];
     
-    NSLog(@"testDE insert\n\n\n\n\n");
-    NSLog(@"%@",insertCoachDE);
+     NSNumber *insertCoachDE1 = (NSNumber *)[_coachDE insertCoach:_coachDO1];
+    
+    NSLog(@"testDE1 insert\n\n\n\n\n");
+    NSLog(@"%@",insertCoachDE1);
     NSLog(@"\n\n\n\n\n");
     
-    XCTAssertEqual([insertCoachDE boolValue],YES );
+     XCTAssertEqual([insertCoachDE1 boolValue],YES );
+    
+    _coachDO2.name = @"Lala";
+    _coachDO2.firstName = @"RAK";
+    _coachDO2.login = @"rakotoml";
+    _coachDO2.password = @"lrak";
+    _coachDO2.leftHanded = YES;
+    
+   
+    NSNumber *insertCoachDE2 = (NSNumber *)[_coachDE insertCoach:_coachDO2];
+    
+
+    NSLog(@"testDE2 insert\n\n\n\n\n");
+    NSLog(@"%@",insertCoachDE2);
+     NSLog(@"\n\n\n\n\n");
+
+    XCTAssertEqual([insertCoachDE2 boolValue],YES );
     
     /********************************************SELECT*************************************************************/
     NSMutableArray *selectCoachDE = [_coachDE selectAllCoaches];
      NSLog(@"testDE select\n\n\n\n\n");
-    //int countDE= [selectCoachDE count];
-    
-    // NSLog(@"NB ELMT DANS NSMUTARR: %i",countDE);
-    int i;
-    
-    for (i = 0 ; i < [selectCoachDE count] ; i++) {
-        id objet = [selectCoachDE objectAtIndex:i];
-         NSLog(@"BOUCLE NSMUTALBEARRAY: %@",objet);
-    }
     
     CoachDO *coach = [selectCoachDE objectAtIndex:1];
     NSLog(@"testDE select\n\n\n\n\n");
-    NSLog(@"%@",coach.name);
+    NSLog(@"Name1:%@",coach.name);
     NSLog(@"\n\n\n\n\n");
-    XCTAssertEqualObjects(@"Adrien", coach.name);
+    XCTAssertEqualObjects(@"Lala", coach.name);
+    
+    NSMutableArray *selectAllCoach = [_coachDE selectOnlyAllCoaches];
+    
+    CoachDO *coach2 = [selectAllCoach objectAtIndex:2];
+   
+    NSLog(@"testDE2 select\n\n\n\n\n");
+    NSLog(@"Name2:%@",coach2.name);
+    NSLog(@"\n\n\n\n\n");
+    XCTAssertEqualObjects(@"Adrien", coach2.name);
+    
     
     /********************************************DELETE*************************************************************/
     NSNumber *delete = (NSNumber *) [_coachDE deleteCoachById:coach.coachId];
     
     XCTAssertEqual([delete boolValue],YES );
+    
+    NSNumber *delete2 = (NSNumber *) [_coachDE deleteCoachById:coach2.coachId];
+    
+    XCTAssertEqual([delete2 boolValue],YES );
 }
 
 @end

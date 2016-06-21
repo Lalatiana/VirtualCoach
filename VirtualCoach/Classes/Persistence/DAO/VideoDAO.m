@@ -104,6 +104,33 @@
     return result;
 }
 
+//UPDATE
+-(id)udpatedVideoProcessed:(NSString *) proc byName:(NSString*) name
+{
+    NSString *query=@"update Video set processed =";
+     query = [query stringByAppendingString:proc];
+    query = [query stringByAppendingString:@" where name='"];
+    query = [query stringByAppendingString:name];
+    query = [query stringByAppendingString:@"';"];
+
+    NSNumber *update = [DatabaseService query:query mode:VCQueryNoMode];
+    
+    return update;
+    
+}
+-(id)udpatedVideoRemoved:(NSString *)rm byName:(NSString*) name
+{
+    NSString *query=@"update Video set removed =";
+    query = [query stringByAppendingString:rm];
+    query = [query stringByAppendingString:@" where name='"];
+    query = [query stringByAppendingString:name];
+    query = [query stringByAppendingString:@"';"];
+    
+    NSNumber *update = [DatabaseService query:query mode:VCQueryNoMode];
+    
+    return update;
+}
+
 //DELETE
 -(id)deleteVideoById:(NSString *) idVideo
 {

@@ -385,7 +385,7 @@
     NSArray *Train1 = [_train searchByDate:@"29/05/2016"] ;
     
     int idT1 = [Train1[0][0] intValue];
-    NSString *idST1 = [NSString stringWithFormat:@"%d",idT1];
+    //NSString *idST1 = [NSString stringWithFormat:@"%d",idT1];
     
     XCTAssertEqual(1, idT1);
     

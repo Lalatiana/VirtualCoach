@@ -18,6 +18,7 @@
 -(id)insertCoach:(CoachDO*)coachDO;
 //SELECT
 -(NSMutableArray<CoachDO*>*)selectAllCoaches;
+-(NSMutableArray<CoachDO*>*)selectOnlyAllCoaches;
 //DELETE
 -(id)deleteCoachById:(int)idCoach;
 @end
