@@ -11,6 +11,10 @@
 #import "CoachDataEngine.h"
 #import "CoachDO.h"
 #import "CheckDatabaseDAO.h"
+#import "PlayerDO.h"
+#import "PlayerDataEngine.h"
+#import "VideoDO.h"
+#import "VideoDataEngine.h"
 
 @interface DataEngineTest : XCTestCase
 
@@ -20,6 +24,10 @@
 @property (nonatomic) CoachDO *coachDO2;
 @property (nonatomic) CheckDatabaseDAO *checkDB;
 @property (nonatomic) NSString * sqlPath;
+@property (nonatomic) PlayerDO *playerDO;
+@property (nonatomic) PlayerDataEngine *playerDE;
+@property (nonatomic) VideoDO *videoDO;
+@property (nonatomic) VideoDataEngine *videoDE;
 
 @end
 
@@ -45,6 +53,10 @@
     _coachDO1 = [[CoachDO alloc]init];
     _coachDO2 = [[CoachDO alloc]init];
     _checkDB = [[CheckDatabaseDAO alloc]init];
+    _playerDE = [[PlayerDataEngine alloc] init];
+    _playerDO = [[PlayerDO alloc] init];
+    _videoDO = [[VideoDO alloc] init];
+    _videoDE = [[VideoDataEngine alloc] init];
 }
 
 - (void)tearDown {
@@ -52,7 +64,7 @@
     [super tearDown];
 }
 
-- (void)testCoachDataEngine {
+- (void)testDataEngine {
     /**************************************************DROP TABLES*****************************************************/
     int rep = [DatabaseService sqlFile:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingString:@"/Database/DropTables.sql"]];
     
@@ -64,7 +76,7 @@
     
     NSLog(@"CHECK: %d", check);
     
-    /********************************************INSERT*************************************************************/
+    /********************************************INSERT COACH*************************************************************/
     _coachDO1.name = @"Adrien";
     _coachDO1.firstName = @"LESUR";
     _coachDO1.login = @"lesura";
@@ -96,7 +108,7 @@
 
     XCTAssertEqual([insertCoachDE2 boolValue],YES );
     
-    /********************************************SELECT*************************************************************/
+    /********************************************SELECT COACH*************************************************************/
     NSMutableArray *selectCoachDE = [_coachDE selectAllCoaches];
      NSLog(@"testDE select\n\n\n\n\n");
     
@@ -115,15 +127,44 @@
     NSLog(@"\n\n\n\n\n");
     XCTAssertEqualObjects(@"Adrien", coach2.name);
     
+    /********************************************INSERT PLAYER*************************************************************/
+    _playerDO.name =@"jd";
+    _playerDO.firstName= @"ZORO";
+    _playerDO.leftHanded=YES;
     
-    /********************************************DELETE*************************************************************/
+    NSNumber *insertPlayerDE = (NSNumber *)[_playerDE insertPlayer:_playerDO andIdCoach:coach.coachId];
+    
+    NSLog(@"testPlayerDE insert\n\n\n\n\n");
+    NSLog(@"%@",insertPlayerDE);
+    NSLog(@"\n\n\n\n\n");
+    
+    XCTAssertEqual([insertPlayerDE boolValue],YES );
+
+    /************************************INSERT PLAYERTRAINING VIDEO****************************************************/
+    _videoDO.name=@"video1";
+    _videoDO.processed=NO;
+    _videoDO.removed=NO;
+    _videoDO.day =22;
+    _videoDO.month=06;
+    _videoDO.year=2016;
+    
+    NSNumber *insertVideoDE = (NSNumber *) [_videoDE insertVideo:_videoDO andIdPlayer:1 andIdTraining:2];
+    
+    NSLog(@"testVideoDE insert\n\n\n\n\n");
+    NSLog(@"%@",insertVideoDE);
+    NSLog(@"\n\n\n\n\n");
+    
+    XCTAssertEqual([insertVideoDE boolValue],YES );
+    
+    
+    /********************************************DELETE COACH************************************************************
     NSNumber *delete = (NSNumber *) [_coachDE deleteCoachById:coach.coachId];
     
     XCTAssertEqual([delete boolValue],YES );
     
     NSNumber *delete2 = (NSNumber *) [_coachDE deleteCoachById:coach2.coachId];
     
-    XCTAssertEqual([delete2 boolValue],YES );
+    XCTAssertEqual([delete2 boolValue],YES );*/
 }
 
 @end

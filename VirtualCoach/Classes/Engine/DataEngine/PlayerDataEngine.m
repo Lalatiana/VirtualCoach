@@ -7,24 +7,46 @@
 //
 
 #import "PlayerDataEngine.h"
-#import "PlayerDAO.h"
 #import "StatisticalDAO.h"
 #import "TrophyDAO.h"
+#import "CoachPlayerDAO.h"
 
 @implementation PlayerDataEngine
 
-//INSERT
--(id)insertPlayer:(PlayerDO *)playerDO
+- (instancetype)init
 {
-    NSString *leftHanded = @"0";
-    if(playerDO.leftHanded == YES){
-        leftHanded= @"0";
-    }
-    else{
-        leftHanded = @"1";
+    self = [super init];
+    
+    if (self)
+    {
+        _playerDAO = [[PlayerDAO alloc] init];
     }
     
-    return [_playerDAO insertIntoPlayer:playerDO.name firstName:playerDO.firstName leftHanded:leftHanded level:nil];
+    return self;
+}
+
+//INSERT
+-(id)insertPlayer:(PlayerDO *)playerDO andIdCoach:(int) idC
+{
+     NSLog(@"Test dans PlayerDE");
+    CoachPlayerDAO *coachPlayerDAO = [[CoachPlayerDAO alloc] init];
+    
+    NSString *leftHanded = @"0";
+    if(playerDO.leftHanded == NO){
+        leftHanded= @"1";
+    }
+    
+   id insertPlayer = [_playerDAO insertIntoPlayer:playerDO.name firstName:playerDO.firstName leftHanded:leftHanded level:@"inconnu"];
+    
+    int idPlayer = [_playerDAO searchIdByName:playerDO.name firstName:playerDO.firstName];
+    
+    NSLog(@"idPLayer: %i",idPlayer);
+    
+    [ coachPlayerDAO insertIntoCoach_Player:[NSString stringWithFormat:@"%i", idPlayer]
+                                  id_player:[NSString stringWithFormat:@"%i", idC]
+     ];
+    
+    return insertPlayer;
 }
 
 //SELECT
@@ -107,7 +129,8 @@
 //DELETE
 -(id)deletePlayerId:(int)idP
 {
-    return [_playerDAO deletePlayerById:[NSString stringWithFormat:@"%i", idP]];
+    NSNumber *deletePlayer = [_playerDAO deletePlayerById:[NSString stringWithFormat:@"%i", idP]];
+    return deletePlayer;
 }
     
 @end

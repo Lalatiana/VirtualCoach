@@ -20,8 +20,8 @@
 -(NSArray *)searchVideoByDay:(NSString*) d Month:(NSString *) m andYear:(NSString *) y;
 -(NSArray *)searchVideoByMonth:(NSString *) m andYear:(NSString *) y;
 //UPDATE
--(id)udpatedVideoProcessing:(NSString *) proc byName:(NSString*) name;
--(id)udpatedVideoRemoving:(NSString *)rm byName:(NSString*) name;
+-(id)updatedVideoProcessing:(NSString *) proc byName:(NSString*) name;
+-(id)updatedVideoRemoving:(NSString *)rm byName:(NSString*) name;
 //DELETE
 -(id)deleteVideoById:(NSString *) idVideo;
 

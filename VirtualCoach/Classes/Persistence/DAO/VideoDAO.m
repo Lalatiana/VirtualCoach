@@ -105,7 +105,7 @@
 }
 
 //UPDATE
--(id)udpatedVideoProcessed:(NSString *) proc byName:(NSString*) name
+-(id)updatedVideoProcessing:(NSString *) proc byName:(NSString*) name
 {
     NSString *query=@"update Video set processed =";
      query = [query stringByAppendingString:proc];
@@ -118,7 +118,7 @@
     return update;
     
 }
--(id)udpatedVideoRemoved:(NSString *)rm byName:(NSString*) name
+-(id)updatedVideoRemoving:(NSString *)rm byName:(NSString*) name
 {
     NSString *query=@"update Video set removed =";
     query = [query stringByAppendingString:rm];

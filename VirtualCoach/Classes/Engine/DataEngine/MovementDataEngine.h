@@ -15,6 +15,6 @@
 @property (nonatomic) MovementDAO *movementDAO;
 
 //INSERT
--(id)insertMovment:(MovementDO*)movementDO;
+-(id)insertMovment:(MovementDO*)movementDO andIdVideo:(int) idVideo;
 
 @end

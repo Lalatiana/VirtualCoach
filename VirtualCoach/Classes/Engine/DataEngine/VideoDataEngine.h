@@ -7,7 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "VideoDataEngine.h"
+#import "VideoDO.h"
+#import "VideoDAO.h"
 
 @interface VideoDataEngine : NSObject
+
+@property (nonatomic) VideoDAO *videoDAO;
+
+//INSERT
+-(id)insertVideo:(VideoDO *)videoDO andIdPlayer:(int) idPlayer andIdTraining:(int)idTraining;
 
 @end

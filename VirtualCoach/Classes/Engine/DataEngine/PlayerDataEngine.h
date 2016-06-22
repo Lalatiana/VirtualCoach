@@ -15,7 +15,7 @@
 @property (nonatomic) PlayerDAO *playerDAO;
 
 //INSERT
--(id)insertPlayer:(PlayerDO *)playerDO;
+-(id)insertPlayer:(PlayerDO *)playerDO andIdCoach:(int) idC;
 //SELECT
 -(NSMutableArray<PlayerDO*>*)selectAllPlayers;
 -(PlayerDO*) selectPlayerById:(int)idP;

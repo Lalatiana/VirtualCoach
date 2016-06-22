@@ -280,7 +280,7 @@
     
     /*********************************************TEST Video*******************************************************/
     //insert video
-    NSNumber *insertVideo = (NSNumber *) [_video insertIntoVideo:@"/A/B/v1" processed:@"0" removed:@"1" day:@"29" month:@"05" year:@"2016"];
+    NSNumber *insertVideo = (NSNumber *) [_video insertIntoVideo:@"/A/B/v1" processed:@"1" removed:@"1" day:@"29" month:@"05" year:@"2016"];
     
     XCTAssertEqual([insertVideo boolValue],YES );
     
@@ -288,14 +288,14 @@
     
     XCTAssertEqual([insertVideo1 boolValue],YES );
     
-    NSNumber *insertVideo2 = (NSNumber *) [_video insertIntoVideo:@"/A/B/v3" processed:@"0" removed:@"1" day:@"31" month:@"05" year:@"2016"];
+    NSNumber *insertVideo2 = (NSNumber *) [_video insertIntoVideo:@"/A/B/v3" processed:@"0" removed:@"0" day:@"31" month:@"05" year:@"2016"];
     
     XCTAssertEqual([insertVideo2 boolValue],YES );
     
     //show all video
     NSArray *videos = [_video allVideo];
     
-    NSLog(@"%@", videos);
+    NSLog(@"Videos before:%@", videos);
     
     XCTAssertEqualObjects(@"/A/B/v1", videos[1][0]);
     
@@ -310,10 +310,10 @@
     
     NSLog(@"%@", Video2);
     
-    XCTAssertEqualObjects(@"0", [[[Video2 objectAtIndex:2] objectAtIndex:0] stringValue]);
+    XCTAssertEqualObjects(@"1", [[[Video2 objectAtIndex:2] objectAtIndex:0] stringValue]);
     
     //search viedeoRef's id
-    int idVideo1 = [_video searchIdVideoByName:@"/A/B/v1" Processed:@"0"] ;
+    int idVideo1 = [_video searchIdVideoByName:@"/A/B/v1" Processed:@"1"] ;
     //NSString *idV1 = [NSString stringWithFormat:@"%d",idVideo1];
     
     XCTAssertEqual(1, idVideo1);
@@ -328,11 +328,21 @@
     
     XCTAssertEqual(2, idVideo3);
     
-    int idVideo4 = [_video searchIdVideoByName:@"/A/B/v3" Removed:@"1"];
+    int idVideo4 = [_video searchIdVideoByName:@"/A/B/v3" Removed:@"0"];
     NSString *idV4 = [NSString stringWithFormat:@"%d",idVideo4];
     
     XCTAssertEqual(3, idVideo4);
     
+    //update
+    NSNumber *updateProcess = [_video updatedVideoProcessing:@"0" byName:@"/A/B/v1"];
+    XCTAssertEqual([updateProcess boolValue],YES );
+    
+    NSNumber *updateRemoved = [_video updatedVideoRemoving:@"1" byName:@"/A/B/v3"];
+     XCTAssertEqual([updateRemoved boolValue],YES );
+    
+    NSArray *videos1 = [_video allVideo];
+    
+    NSLog(@"Videos after:%@", videos1);
     /*********************************************TEST Movement******************************************************/
     //insert Movement
     NSNumber *insertMovement = (NSNumber *) [_mvt insertIntoMovement:@"forehand" winner:@"1" losing:@"0" success_rate:@"20%" id_video:idV2];

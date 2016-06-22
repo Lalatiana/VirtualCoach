@@ -21,8 +21,8 @@
 -(NSArray *)searchVideoRefByMonth:(NSString *) m andYear:(NSString *) y;
 -(NSArray *)searchVideoRefByIdCoach:(NSString *) idC;
 //UPDATE
--(id)udpatedVideoProcessing:(NSString *) proc byName:(NSString*) name;
--(id)udpatedVideoRemoving:(NSString *)rm byName:(NSString*) name;
+-(id)updatedVideoProcessing:(NSString *) proc byName:(NSString*) name;
+-(id)updatedVideoRemoving:(NSString *)rm byName:(NSString*) name;
 //DELETE
 -(id)deleteVideoRefById:(NSString *) idVideo;
 

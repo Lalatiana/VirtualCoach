@@ -165,6 +165,7 @@ static BOOL initialized;
 
 + (NSDictionary *)selectWithIndexedByColumnNameResult:(NSString *)query
 {
+    NSLog(@"Query: %@",query);
     sqlite3_stmt *statement;
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     
@@ -206,6 +207,7 @@ static BOOL initialized;
 
 + (id)update:(NSString *)query
 {
+    NSLog(@"Query: %@",query);
     int result=0;
     sqlite3_stmt *updateStmt;
      char* errMsg;
@@ -256,6 +258,7 @@ static BOOL initialized;
 //DELETE query
 + (id)delete:(NSString *)query
 {
+    NSLog(@"Query: %@",query);
     int result = 0;
     char *errMsg;
     
