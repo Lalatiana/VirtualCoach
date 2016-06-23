@@ -38,7 +38,13 @@
     NSArray * result =[[NSArray alloc]init];
     result = [DatabaseService query:query mode:VCSelectIntegerIndexedResult];
     
-    int desc = (int) [result[0][0] longValue];
+    int desc;
+    if(result.count > 0){
+          desc = (int) [result[0][0] longValue];
+    }
+    else{
+        desc = -1;
+    }
     
     return desc;
 }

@@ -18,7 +18,7 @@
 -(id)insertCoach:(CoachDO*)coachDO;
 //SELECT
 -(NSMutableArray<CoachDO*>*)selectAllCoaches;
--(NSMutableArray<CoachDO*>*)selectOnlyAllCoaches;
+-(CoachDO*)searchByLogin:(NSString*)login password:(NSString*)pass;
 //DELETE
 -(id)deleteCoachById:(int)idCoach;
 @end

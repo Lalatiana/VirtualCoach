@@ -137,35 +137,26 @@
     
 }
 
--(NSMutableArray<CoachDO*>*)selectOnlyAllCoaches
-{
-    CoachDO *coachDO;
-    NSMutableArray<CoachDO*> *arrayCoachDO = [[NSMutableArray<CoachDO*> alloc] init];
-    
-     NSArray *allCoaches = [_coachDAO allCoaches];
-    
-    for(int i = 0; i<[allCoaches count]; i++){
-        for(int j = 0; j<[allCoaches[i] count]; j++){
-            
-            bool leftHanded = YES;
-            if([allCoaches[3][j]  intValue] == 1){
-                leftHanded = NO;
-            }
-            
-            coachDO = [[CoachDO alloc] initWithCoachId:(int)[[allCoaches objectAtIndex:0] objectAtIndex:j]
-                                               andName:allCoaches[1][j]
-                                          andFirstName:allCoaches[2][j]
-                                              andLogin:allCoaches[4][j]
-                                           andPassword:allCoaches[5][j]
-                                         andLeftHanded:leftHanded
-                                            andPlayers:nil
-                                    andReferenceVideos:nil];
-            
-            [arrayCoachDO addObject:coachDO];
+-(CoachDO*)searchByLogin:(NSString*)login password:(NSString*)pass {
+    NSArray* searchResult = [_coachDAO searchByLogin:login password:pass];
+    CoachDO* coach = [[CoachDO alloc] init];
+    if ([searchResult count] > 0) {
+        int coachId = [[[searchResult objectAtIndex:0] objectAtIndex:0] intValue];
+        NSString* coachName = [[[searchResult objectAtIndex:1] objectAtIndex:0] stringValue];
+        NSString* coachFirstName = [[[searchResult objectAtIndex:2] objectAtIndex:0] stringValue];
+        NSString* coachLogin = [[[searchResult objectAtIndex:3] objectAtIndex:0] stringValue];
+        NSString* coachPassword = [[[searchResult objectAtIndex:4] objectAtIndex:0] stringValue];
+        bool leftHanded = [[[searchResult objectAtIndex:5] objectAtIndex:0] boolValue];
+        
+        coach.coachId = coachId;
+        coach.name = coachName;
+        coach.firstName = coachFirstName;
+        coach.login = coachLogin;
+        coach.password = coachPassword;
+        coach.leftHanded = leftHanded;
         }
-    }
     
-    return arrayCoachDO;
+      return coach;
 }
 
 //DELETE

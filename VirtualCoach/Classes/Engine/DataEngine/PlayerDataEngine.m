@@ -118,10 +118,12 @@
     
     NSArray *players = [playerDAO searchPlayerById:[NSString stringWithFormat:@"%i", idP]];
     
-    playerDO.playerId = idP;
-    playerDO.name = players[1][0];
-    playerDO.firstName = players[2][0];
-    playerDO.leftHanded = players[3][0];
+    if(players.count > 0){
+        playerDO.playerId = idP;
+        playerDO.name = players[1][0];
+        playerDO.firstName = players[2][0];
+        playerDO.leftHanded = players[3][0];
+    }
     
     return playerDO;
 }

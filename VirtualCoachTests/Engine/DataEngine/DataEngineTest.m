@@ -118,15 +118,6 @@
     NSLog(@"\n\n\n\n\n");
     XCTAssertEqualObjects(@"Lala", coach.name);
     
-    NSMutableArray *selectAllCoach = [_coachDE selectOnlyAllCoaches];
-    
-    CoachDO *coach2 = [selectAllCoach objectAtIndex:2];
-   
-    NSLog(@"testDE2 select\n\n\n\n\n");
-    NSLog(@"Name2:%@",coach2.name);
-    NSLog(@"\n\n\n\n\n");
-    XCTAssertEqualObjects(@"Adrien", coach2.name);
-    
     /********************************************INSERT PLAYER*************************************************************/
     _playerDO.name =@"jd";
     _playerDO.firstName= @"ZORO";

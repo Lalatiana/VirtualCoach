@@ -8,6 +8,10 @@
 
 #import "MovementDataEngine.h"
 
+@interface MovementDataEngine ()
+- (NSString*) convertToString:(MovementEnum)type;
+@end
+
 @implementation MovementDataEngine
 
 - (instancetype)init
@@ -22,8 +26,30 @@
     return self;
 }
 
+//convert enum to NSSTRING
+- (NSString*) convertToString:(MovementEnum)type
+{
+    NSString *typeMvt = nil;
+    switch(type) {
+        case FOREHAND:
+            typeMvt = @"FOREHAND";
+            break;
+        case BACKHAND:
+            typeMvt = @"BACKHAND";
+            break;
+        case SERVICE:
+            typeMvt = @"SERVICE";
+            break;
+            
+        default:
+            typeMvt = @"unknown";
+    }
+    
+    return typeMvt;
+    
+}
 //INSERT
-/*-(id)insertMovment:(MovementDO*)movementDO andIdVideo:(int) idVideo
+-(id)insertMovment:(MovementDO*)movementDO andIdVideo:(int) idVideo
 {
     NSString *winning = @"0";
     if(movementDO.winning == NO){
@@ -34,11 +60,14 @@
     if(movementDO.loosing == NO){
         loosing= @"1";
     }
-    return [_movementDAO insertIntoMovement:movementDO.type
+    
+    NSString *type = [self convertToString:movementDO.type];
+    
+    return [_movementDAO insertIntoMovement:type
                                      winner:winning
                                      losing:loosing
-                               success_rate:movementDO.successRate
+                               success_rate:[NSString stringWithFormat:@"%1.6f", movementDO.successRate]
                                    id_video:nil];
-}*/
+}
 
 @end
