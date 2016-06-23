@@ -15,7 +15,7 @@
 -(id)insertIntoCoach:(NSString *) name firstName:(NSString *) fname leftHanded:(NSString *) lh login:(NSString *) log password:(NSString *) pass;
 //SELECT
 -(NSArray *) allCoaches;
--(int)searchIdByLogin:(NSString *) login password:(NSString *) pass;
+-(NSArray *)searchByLogin:(NSString *) login password:(NSString *) pass;
 //DELETE
 -(id)deleteCoachById:(NSString *) idCoach;
 //UPDATE

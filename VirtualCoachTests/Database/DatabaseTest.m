@@ -111,15 +111,19 @@
     XCTAssertEqualObjects(@"Lala", coaches[2][0]);
     
     //search coach's id
-    int idCoach = [_coach searchIdByLogin:@"lrak" password:@"lrakotom"];
-    NSString *idC = [NSString stringWithFormat:@"%d",idCoach];
+    NSArray* coach = [_coach searchByLogin:@"lrak" password:@"lrakotom"];
+    XCTAssertEqual(1, [coach[0] count]);
+    int coachId = [[[coach objectAtIndex:0] objectAtIndex:0] intValue];
+    NSString *idC = [NSString stringWithFormat:@"%d", coachId];
     NSLog(@"IDCOACH: %@", idC);
-    XCTAssertEqual(1, idCoach);
+    XCTAssertEqual(1, coachId);
     
-    int idCoach1 = [_coach searchIdByLogin:@"drom" password:@"dromain"];
-    NSString *idC1 = [NSString stringWithFormat:@"%d",idCoach1];
+    NSArray* coach1 = [_coach searchByLogin:@"drom" password:@"dromain"];
+    XCTAssertEqual(1, [coach1[0] count]);
+    int coachId1 = [[[coach1 objectAtIndex:0] objectAtIndex:0] intValue];
+    NSString *idC1 = [NSString stringWithFormat:@"%d",coachId1];
     NSLog(@"IDCOACH: %@", idC1);
-    XCTAssertEqual(2, idCoach1);
+    XCTAssertEqual(2, coachId1);
     
     /*********************************************TEST PLAYER*********************************************************/
     //insert player

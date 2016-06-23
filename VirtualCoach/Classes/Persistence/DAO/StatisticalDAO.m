@@ -100,7 +100,7 @@
     query = [query stringByAppendingString:year];
     query = [query stringByAppendingString:@"' and idplayer='"];
     query = [query stringByAppendingString:idPlayer];
-    query = [query stringByAppendingString:@"';"];
+    query = [query stringByAppendingString:@"' order by month;"];
     
     NSArray * result =[[NSArray alloc]init];
     result = [DatabaseService query:query mode:VCSelectIntegerIndexedResult];
@@ -177,7 +177,7 @@
             query = [query stringByAppendingString:@"' and day between '"];
             query = [query stringByAppendingString:startDay];
             query = [query stringByAppendingString:@"' and '"];
-            query = [query stringByAppendingString:endYear];
+            query = [query stringByAppendingString:endDay];
             query = [query stringByAppendingString:@"'"];
         }
     }

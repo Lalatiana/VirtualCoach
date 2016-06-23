@@ -105,9 +105,81 @@
     
     NSArray* searchResult = [_statisticalDAO searchByYear:stringYear andIdPlayer:stringPlayerId];
     
-    // TODO : average by month
+    // Average by month
+    NSMutableArray<StatisticalDO*>* searchResultMutableArray = [self fromResultSetToStatisticalDOList:searchResult];
+    NSMutableArray<StatisticalDO*>* resultWithAverageByMonth = [[NSMutableArray<StatisticalDO*> alloc] initWithCapacity:12];
     
-    return [self fromResultSetToStatisticalDOList:searchResult];
+    int month = 1;
+    int monthTotalDO = 0;
+    StatisticalDO* finalMonthDO = [[StatisticalDO alloc] init];
+    finalMonthDO.forehandCount = 0;
+    finalMonthDO.backhandCount = 0;
+    finalMonthDO.serviceCount = 0;
+    finalMonthDO.forehandGlobalSuccessRate = 0.0;
+    finalMonthDO.backhandGlobalSuccessRate = 0.0;
+    finalMonthDO.serviceGlobalSuccessRate = 0.0;
+    finalMonthDO.winningRun = 0;
+    finalMonthDO.loosingRun = 0;
+    finalMonthDO.month = month;
+    
+    for (int i = 0; i < [searchResultMutableArray count]; i++) {
+        
+        StatisticalDO* statisticalDO = [searchResultMutableArray objectAtIndex:i];
+        int statisticalMonth = statisticalDO.month;
+        
+        if (statisticalMonth != month) {
+            finalMonthDO.forehandCount /= monthTotalDO;
+            finalMonthDO.backhandCount /= monthTotalDO;
+            finalMonthDO.serviceCount /= monthTotalDO;
+            finalMonthDO.forehandGlobalSuccessRate /= monthTotalDO;
+            finalMonthDO.backhandGlobalSuccessRate /= monthTotalDO;
+            finalMonthDO.serviceGlobalSuccessRate /= monthTotalDO;
+            finalMonthDO.winningRun /= monthTotalDO;
+            finalMonthDO.loosingRun /= monthTotalDO;
+            
+            [resultWithAverageByMonth addObject:finalMonthDO];
+            
+            for (int j = month+1; j < statisticalMonth; j++) {
+                finalMonthDO = [[StatisticalDO alloc] init];
+                finalMonthDO.forehandCount = -1;
+                finalMonthDO.backhandCount = -1;
+                finalMonthDO.serviceCount = -1;
+                finalMonthDO.forehandGlobalSuccessRate = -1.f;
+                finalMonthDO.backhandGlobalSuccessRate = -1.f;
+                finalMonthDO.serviceGlobalSuccessRate = -1.f;
+                finalMonthDO.winningRun = -1;
+                finalMonthDO.loosingRun = -1;
+                finalMonthDO.month = j;
+                [resultWithAverageByMonth addObject:finalMonthDO];
+            }
+            
+            monthTotalDO = 1;
+            statisticalMonth = month;
+            
+            finalMonthDO = [[StatisticalDO alloc] init];
+            finalMonthDO.forehandCount = 0;
+            finalMonthDO.backhandCount = 0;
+            finalMonthDO.serviceCount = 0;
+            finalMonthDO.forehandGlobalSuccessRate = 0.0;
+            finalMonthDO.backhandGlobalSuccessRate = 0.0;
+            finalMonthDO.serviceGlobalSuccessRate = 0.0;
+            finalMonthDO.winningRun = 0;
+            finalMonthDO.loosingRun = 0;
+            finalMonthDO.month = month;
+        }
+        
+            finalMonthDO.forehandCount += statisticalDO.forehandCount;
+            finalMonthDO.backhandCount += statisticalDO.backhandCount;
+            finalMonthDO.serviceCount += statisticalDO.serviceCount;
+            finalMonthDO.forehandGlobalSuccessRate += statisticalDO.forehandGlobalSuccessRate;
+            finalMonthDO.backhandGlobalSuccessRate += statisticalDO.backhandGlobalSuccessRate;
+            finalMonthDO.serviceGlobalSuccessRate += statisticalDO.serviceGlobalSuccessRate;
+            finalMonthDO.winningRun += statisticalDO.winningRun;
+            finalMonthDO.loosingRun += statisticalDO.loosingRun;
+            monthTotalDO++;
+    }
+    
+    return resultWithAverageByMonth;
 }
 
 -(NSMutableArray<StatisticalDO*>*)searchByPlayerId:(int)playerId {
@@ -165,6 +237,10 @@
 //
 
 -(NSMutableArray<StatisticalDO*>*)fromResultSetToStatisticalDOList:(NSArray*)result {
+    
+    if ([result count] <= 0) {
+        return [[NSMutableArray<StatisticalDO*> alloc] init];
+    }
     
     NSMutableArray<StatisticalDO*>* statisticalDOList = [[NSMutableArray<StatisticalDO*> alloc] initWithCapacity:[result[0] count]];
     
